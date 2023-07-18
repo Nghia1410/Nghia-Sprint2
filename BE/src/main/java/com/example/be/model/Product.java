@@ -10,7 +10,7 @@ public class Product {
     @Column(name = "id_product")
     private Integer idProduct;
 
-    @Column(name = "name_product",columnDefinition = "Varchar(50)")
+    @Column(name = "name_product",columnDefinition = "MEDIUMTEXT")
     private String nameProduct;
 
 

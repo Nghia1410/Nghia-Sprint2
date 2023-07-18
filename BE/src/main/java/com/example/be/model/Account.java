@@ -1,8 +1,6 @@
 package com.example.be.model;
 
 
-import com.example.be.model.AccountRole;
-import com.example.be.model.Employee;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
