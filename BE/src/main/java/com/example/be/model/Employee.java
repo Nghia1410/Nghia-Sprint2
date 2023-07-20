@@ -37,6 +37,11 @@ public class Employee {
     @Column(name = "email", columnDefinition = "Varchar(40)")
     private String email;
 
+    @ManyToOne
+    @JoinColumn(name = "id_position", referencedColumnName = "id_position")
+    private Position position;
+
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_account", referencedColumnName = "id_account")
     @JsonManagedReference
@@ -45,7 +50,8 @@ public class Employee {
     public Employee() {
     }
 
-    public Employee(Integer idEmployee, Boolean gender, LocalDate dateOfBirth, Double salary, String image, String nameEmployee, String address, String phoneNumber, String email, Account account) {
+    public Employee(Integer idEmployee, Boolean gender, LocalDate dateOfBirth, Double salary, String image,
+                    String nameEmployee, String address, String phoneNumber, String email, Position position, Account account) {
         this.idEmployee = idEmployee;
         this.gender = gender;
         this.dateOfBirth = dateOfBirth;
@@ -55,6 +61,7 @@ public class Employee {
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.email = email;
+        this.position = position;
         this.account = account;
     }
 
@@ -128,6 +135,14 @@ public class Employee {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Position getPosition() {
+        return position;
+    }
+
+    public void setPosition(Position position) {
+        this.position = position;
     }
 
     public Account getAccount() {
