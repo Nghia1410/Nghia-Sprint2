@@ -1,117 +1,132 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap');
+
+
+/*@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,700;1,400&display=swap');*/
+
+
 *{
-    margin: 0;
     padding: 0;
-    font-family: 'poppins',sans-serif;
+    margin: 0;
+    box-sizing: border-box;
 }
-#bgr{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    width: 100%;
 
-    background: url('https://wallpapercave.com/wp/wp2786566.png')no-repeat;
-    background-position: center;
-    background-size: cover;
+#loginPage {
+    margin-top: 120px;
 }
-.form-box{
-    position: relative;
-    width: 400px;
+
+#loginPage .text-forgot-password {
+    color: silver;
+}
+
+#loginPage .bg-modal {
+    background-color: #FDF0D3 !important;
+}
+
+#loginPage .text-modal {
+    color: #AA803B;
+}
+
+#loginPage .fs-15 {
+    font-size: 14px !important;
+}
+
+#loginPage .fs-10 {
+    font-size: 10px !important;
+}
+
+#loginPage .br-10 {
+    border-radius: 10px;
+}
+
+#loginPage .content {
+    background-color: #181A1B;
+    max-width: 80%;
+    width: 80%;
     height: 450px;
-    background: transparent;
-    border: 2px solid rgba(255,255,255,0.5);
-    border-radius: 20px;
-    backdrop-filter: blur(65px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-}
-h2{
-    font-size: 2em;
-    color: #fff;
-    text-align: center;
-}
-.inputbox{
+    margin: auto !important;
+    border-radius: 10px;
+    box-shadow: 0px 10px 34px -15px rgba(0, 0, 0, 0.5);
+    background-image: url(https://wallpapercave.com/wp/wp2786566.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
     position: relative;
-    margin: 30px 0;
-    width: 310px;
-    border-bottom: 2px solid #fff;
 }
-.inputbox label{
-    position: absolute;
-    top: 50%;
-    left: 5px;
-    transform: translateY(-50%);
-    color: #fff;
-    font-size: 1em;
-    pointer-events: none;
-    transition: .5s;
+#loginPage .form-custom {
+    border-radius: 0px !important;
+    border: none !important;
+    border-bottom: 1px solid white !important;
+    background-color: transparent!important;
+    color: white !important;
 }
-input:focus ~ label,
-input:valid ~ label{
-    top: -5px;
+#loginPage .form-custom::placeholder {
+    color: white !important;
+    opacity: 1;
 }
-.inputbox input {
-    width: 100%;
-    height: 50px;
-    background: transparent;
-    border: none;
-    outline: none;
-    font-size: 1em;
-    padding:0 35px 0 5px;
-    color: #fff;
+#loginPage .form-custom:focus {
+    color: white;
+    background-color: #fff;
+    border-color: transparent;
+    outline: 0;
+    box-shadow: none !important;
 }
-.inputbox ion-icon{
-    position: absolute;
-    right: 8px;
-    color: #fff;
-    font-size: 1.2em;
-    top: 20px;
+#loginPage h1 {
+    font-weight: 700 !important;
+    color: white;
 }
-.forget{
-    margin: -15px 0 15px ;
-    font-size: .9em;
-    color: #fff;
+#loginPage form {
+    margin: 0 40px;
+}
+#loginPage .modal-header {
+    border-bottom: none !important;
+}
+
+.modal-footer {
+    border-top: none !important;
+}
+
+.modal-body {
+    padding: 0 1rem !important;
+}
+
+#loginPage span.password-icon {
+    color: black !important;
     display: flex;
-    justify-content: space-between;
+    align-items: center;
+    position: absolute;
+    right: 10px;
+    top:10px;
+    z-index: 88;
 }
 
-.forget label input{
-    margin-right: 3px;
 
+#loginPage .button {
+    padding: 10px 25px;
+    border-radius: 50px !important;
+    border: 0;
+    background-color: white;
+    box-shadow: rgb(0 0 0 / 5%) 0 0 8px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-size: 15px;
+    font-weight: bold;
+    transition: all .5s ease;
+    color: #454B4B;
 }
-.forget label a{
-    color: #fff;
-    text-decoration: none;
+
+#loginPage .button:hover {
+    background-color: #b6751b;
+    color: hsl(0, 0%, 100%);
 }
-.forget label a:hover{
-    text-decoration: underline;
+
+#loginPage .button:active {
+    letter-spacing: 3px;
+    background-color: #b6751b;
+    color: hsl(0, 0%, 100%);
 }
-button{
-    width: 100%;
-    height: 40px;
-    border-radius: 40px;
-    background: #fff3cd;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    font-size: 1em;
-    font-weight: 600;
-    color: black;
+#loginPage .icon-custom{
+    margin-top: 5px;
+    border-bottom: 1px solid white;
 }
-.register{
-    font-size: .9em;
-    color: #fff;
-    text-align: center;
-    margin: 25px 0 10px;
-}
-.register p a{
-    text-decoration: none;
-    color: #fff;
-    font-weight: 600;
-}
-.register p a:hover{
-    text-decoration: underline;
+#loginPage .modal-content {
+    width: 70%;
 }

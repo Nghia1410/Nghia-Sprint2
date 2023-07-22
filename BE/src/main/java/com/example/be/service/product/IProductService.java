@@ -1,11 +1,13 @@
 package com.example.be.service.product;
 
 import com.example.be.model.Product;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+
+import java.util.List;
 
 public interface IProductService {
-    Page<Product> showList(Pageable pageable);
+    List<Product> showList();
 
-    Product findById(int id);
+    Product findById(Integer id);
+
+    List<Product> getProductByTypeProduct(Integer type);
 }

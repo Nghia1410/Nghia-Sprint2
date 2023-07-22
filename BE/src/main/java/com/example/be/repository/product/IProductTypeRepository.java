@@ -9,4 +9,5 @@ import java.util.List;
 public interface IProductTypeRepository extends JpaRepository<ProductType, Integer> {
     @Query(value = "select * from product_type", nativeQuery = true)
     List<ProductType> findAllProductType();
+
 }

@@ -1,8 +1,10 @@
 import './App.css';
 import React from "react";
 import {Route, Routes} from 'react-router-dom'
-import { Home } from './component/home';
 import { Login } from './component/Login';
+import { Home } from './component/home';
+import { Shop } from './component/Shop';
+import { Detail } from './component/Detail';
 
 
 function App() {
@@ -10,7 +12,9 @@ function App() {
     <>
   <Routes>
     <Route path='/' element={<Home/>}/>
-    <Route path='/login' element={<Login/>}/>
+    <Route path='/api/login' element={<Login/>}/>
+    <Route path='/shop' element={<Shop/>}/>
+    <Route path='/detail/:id' element={<Detail/>}/>
   </Routes>
     </>
   );

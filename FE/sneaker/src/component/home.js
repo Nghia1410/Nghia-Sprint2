@@ -1,92 +1,125 @@
+import axios from "axios";
+import * as productService from "../service/productService"
+import React, { useEffect, useState } from "react"
+import { NavLink } from "react-router-dom";
+
+
 export function Home() {
+    const [product, setProduct] = useState([]);
+    const [itemsToShow, setItemsToShow] = useState(8); // Số sản phẩm hiển thị ban đầu
+    useEffect(() => {
+        const showList = async () => {
+            const rs = await productService.findAllProduct();
+            setProduct(rs)
+        }
+        showList()
+    }, []);
+
+
+    console.log(product);
     return (
         <>
-  
-            <nav
-                className="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light"
-                id="ftco-navbar"
-            >
-                <div className="container">
-                    <a className="navbar-brand" href="index.html">
-                        Minishop
-                    </a>
-                    <button
-                        className="navbar-toggler"
-                        type="button"
-                        data-toggle="collapse"
-                        data-target="#ftco-nav"
-                        aria-controls="ftco-nav"
-                        aria-expanded="false"
-                        aria-label="Toggle navigation"
-                    >
-                        <span className="oi oi-menu" /> Menu
-                    </button>
-                    <div className="collapse navbar-collapse" id="ftco-nav">
-                        <ul className="navbar-nav ml-auto">
-                            <li className="nav-item active">
-                                <a href="index.html" className="nav-link">
-                                    Home
-                                </a>
-                            </li>
-                            <li className="nav-item dropdown">
-                                <a
-                                    className="nav-link dropdown-toggle"
-                                    href="#"
-                                    id="dropdown04"
-                                    data-toggle="dropdown"
-                                    aria-haspopup="true"
-                                    aria-expanded="false"
-                                >
-                                    Catalog
-                                </a>
-                                <div className="dropdown-menu" aria-labelledby="dropdown04">
-                                    <a className="dropdown-item" href="shop.html">
+
+            <div>
+                <nav
+                    className="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light"
+                    id="ftco-navbar"
+                >
+                    <div className="container">
+                        <a className="navbar-brand" href="/">
+                            HypeSneaker
+                        </a>
+                        <button
+                            className="navbar-toggler"
+                            type="button"
+                            data-toggle="collapse"
+                            data-target="#ftco-nav"
+                            aria-controls="ftco-nav"
+                            aria-expanded="false"
+                            aria-label="Toggle navigation"
+                        >
+                            <span className="oi oi-menu" /> Menu
+                        </button>
+                        <div className="collapse navbar-collapse" id="ftco-nav">
+                            <ul className="navbar-nav ml-auto">
+                                <li className="nav-item active">
+                                    <a href="/" className="nav-link">
+                                        Home
+                                    </a>
+                                </li>
+                                <li className="nav-item dropdown">
+                                    <a
+                                        className="nav-link "
+                                        href="/shop"
+                                    >
                                         Shop
                                     </a>
-                                    <a className="dropdown-item" href="product-single.html">
-                                        Single Product
+
+                                </li>
+                                <li className="nav-item">
+                                    <a href="about.html" className="nav-link">
+                                        About
                                     </a>
-                                    <a className="dropdown-item" href="cart.html">
-                                        Cart
+                                </li>
+
+                                <li className="nav-item cta cta-colored">
+                                    <a href="cart.html" className="nav-link">
+                                        <span className="icon-shopping_cart" />
+                                        [0]
                                     </a>
-                                    <a className="dropdown-item" href="checkout.html">
-                                        Checkout
-                                    </a>
-                                </div>
-                            </li>
-                            <li className="nav-item">
-                                <a href="about.html" className="nav-link">
-                                    About
-                                </a>
-                            </li>
-                            <li className="nav-item">
-                                <a href="blog.html" className="nav-link">
-                                    Blog
-                                </a>
-                            </li>
-                            <li className="nav-item">
-                                <a href="contact.html" className="nav-link">
-                                    Contact
-                                </a>
-                            </li>
-                            <li className="nav-item cta cta-colored">
-                                <a href="cart.html" className="nav-link">
-                                    <span className="icon-shopping_cart" />
-                                    [0]
-                                </a>
-                            </li>
-                        </ul>
+                                </li>
+
+
+                            </ul>
+                        </div>
+                    </div>
+
+                </nav>
+
+                {/* END nav */}
+            </div>
+            <div style={{ marginTop: "100px" }}
+                id="carouselExampleControls"
+                className="carousel slide"
+                data-bs-ride="carousel"
+            >
+                <div className="carousel-inner">
+                    <div className="carousel-item active">
+                        <img src="https://glab.vn/storage/uploads/advert/6448f45698c3e.jpg" className="d-block w-100" alt="..." />
+                    </div>
+                    <div className="carousel-item">
+                        <img src="https://glab.vn/storage/uploads/advert/64982667e4f4d.jpg" className="d-block w-100" alt="..." />
+                    </div>
+                    <div className="carousel-item">
+                        <img src="https://glab.vn/storage/uploads/advert/6464cc1cd8e4d.jpg" className="d-block w-100" alt="..." />
                     </div>
                 </div>
-            </nav>
-            {/* END nav */}
-          
-           
+                <button
+                    className="carousel-control-prev"
+                    type="button"
+                    data-bs-target="#carouselExampleControls"
+                    data-bs-slide="prev"
+                >
+                    <span className="carousel-control-prev-icon" aria-hidden="true" style={{ marginTop: "11%" }} />
+                    <span className="visually-hidden">Previous</span>
+                </button>
+                <button
+                    className="carousel-control-next"
+                    type="button"
+                    data-bs-target="#carouselExampleControls"
+                    data-bs-slide="next"
+                >
+                    <span className="carousel-control-next-icon" aria-hidden="true" style={{ marginTop: "11%" }} />
+                    <span className="visually-hidden">Next</span>
+                </button>
+            </div>
+
+
             <section className="ftco-section bg-light">
                 <div className="container">
                     <div className="row justify-content-center mb-3 pb-3">
                         <div className="col-md-12 heading-section text-center ">
-                            <h2 className="mb-4">New Shoes Arrival</h2>
+                            <h2 className="mb-4">NEW COLLECTION </h2>
                             <p>
                                 Far far away, behind the word mountains, far from the countries
                                 Vokalia and Consonantia
@@ -94,585 +127,71 @@ export function Home() {
                         </div>
                     </div>
                 </div>
+
                 <div className="container">
                     <div className="row">
-                        <div className="col-sm-12 col-md-6 col-lg-3 d-flex">
-                            <div className="product d-flex flex-column">
-                                <a href="#" className="img-prod">
-                                    <img
-                                        className="img-fluid"
-                                        src="https://glab.vn/storage/products/2021/10/28/480x320/617a2b017cfe3.jpg"
-                                        alt="Colorlib Template"
-                                    />
-                                    <div className="overlay" />
-                                </a>
-                                <div className="text py-3 pb-4 px-3">
-                                    <div className="d-flex">
-                                        <div className="cat">
-                                            <span>Lifestyle</span>
-                                        </div>
-                                        <div className="rating">
-                                            <p className="text-right mb-0">
-                                                <a href="#">
-                                                    <span className="ion-ios-star-outline" />
-                                                </a>
-                                                <a href="#">
-                                                    <span className="ion-ios-star-outline" />
-                                                </a>
-                                                <a href="#">
-                                                    <span className="ion-ios-star-outline" />
-                                                </a>
-                                                <a href="#">
-                                                    <span className="ion-ios-star-outline" />
-                                                </a>
-                                                <a href="#">
-                                                    <span className="ion-ios-star-outline" />
-                                                </a>
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <h3>
-                                        <a href="#">Nike Free RN 2019 iD</a>
-                                    </h3>
-                                    <div className="pricing">
-                                        <p className="price">
-                                            <span>$120.00</span>
-                                        </p>
-                                    </div>
-                                    <p className="bottom-area d-flex px-3">
-                                        <a href="#" className="add-to-cart text-center py-2 mr-1">
-                                            <span>
-                                                Add to cart <i className="ion-ios-add ml-1" />
-                                            </span>
+                        {product?.slice(0, itemsToShow)?.map((value, index) => (
+
+                            <div className="col-sm-12 col-md-6 col-lg-3 d-flex" key={index}>
+                                <div className="product d-flex flex-column">
+                                    <NavLink to={`/detail/${value.idProduct}`}>
+                                        <a className="img-prod">
+                                            <img src={value.image} className="slide_img" />
+                                            <img style={{ width: "70px", marginLeft: "200px", marginTop: "20px" }} src="https://o.remove.bg/downloads/ea9e98f9-2441-42c7-9635-6172d4f4d58e/new-removebg-preview__1_-removebg-preview.png" className="news_label" />
+                                            <div className="overlay" />
                                         </a>
-                                        <a href="#" className="buy-now text-center py-2">
-                                            Buy now
-                                            <span>
-                                                <i className="ion-ios-cart ml-1" />
-                                            </span>
-                                        </a>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-sm-12 col-md-6 col-lg-3 d-flex">
-                            <div className="product d-flex flex-column">
-                                <a href="#" className="img-prod">
-                                    <img
-                                        className="img-fluid"
-                                        src="https://glab.vn/storage/products/2021/10/28/480x320/617a2b017cfe3.jpg"
-                                        alt="Colorlib Template"
-                                    />
-                                    <span className="status">50% Off</span>
-                                    <div className="overlay" />
-                                </a>
-                                <div className="text py-3 pb-4 px-3">
-                                    <div className="d-flex">
-                                        <div className="cat">
-                                            <span>Lifestyle</span>
-                                        </div>
-                                        <div className="rating">
-                                            <p className="text-right mb-0">
-                                                <a href="#">
-                                                    <span className="ion-ios-star-outline" />
-                                                </a>
-                                                <a href="#">
-                                                    <span className="ion-ios-star-outline" />
-                                                </a>
-                                                <a href="#">
-                                                    <span className="ion-ios-star-outline" />
-                                                </a>
-                                                <a href="#">
-                                                    <span className="ion-ios-star-outline" />
-                                                </a>
-                                                <a href="#">
-                                                    <span className="ion-ios-star-outline" />
-                                                </a>
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <h3>
-                                        <a href="#">Nike Free RN 2019 iD</a>
-                                    </h3>
-                                    <div className="pricing">
-                                        <p className="price">
-                                            <span className="mr-2 price-dc">$120.00</span>
-                                            <span className="price-sale">$80.00</span>
-                                        </p>
-                                    </div>
-                                    <p className="bottom-area d-flex px-3">
-                                        <a href="#" className="add-to-cart text-center py-2 mr-1">
-                                            <span>
-                                                Add to cart <i className="ion-ios-add ml-1" />
-                                            </span>
-                                        </a>
-                                        <a href="#" className="buy-now text-center py-2">
-                                            Buy now
-                                            <span>
-                                                <i className="ion-ios-cart ml-1" />
-                                            </span>
-                                        </a>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-sm-12 col-md-6 col-lg-3 d-flex">
-                            <div className="product">
-                                <a href="#" className="img-prod">
-                                    <img
-                                        className="img-fluid"
-                                        src="https://glab.vn/storage/products/2021/10/28/480x320/617a2b017cfe3.jpg"
-                                        alt="Colorlib Template"
-                                    />
-                                    <div className="overlay" />
-                                </a>
-                                <div className="text py-3 pb-4 px-3">
-                                    <div className="d-flex">
-                                        <div className="cat">
-                                            <span>Lifestyle</span>
-                                        </div>
-                                        <div className="rating">
-                                            <p className="text-right mb-0">
-                                                <a href="#">
-                                                    <span className="ion-ios-star-outline" />
-                                                </a>
-                                                <a href="#">
-                                                    <span className="ion-ios-star-outline" />
-                                                </a>
-                                                <a href="#">
-                                                    <span className="ion-ios-star-outline" />
-                                                </a>
-                                                <a href="#">
-                                                    <span className="ion-ios-star-outline" />
-                                                </a>
-                                                <a href="#">
-                                                    <span className="ion-ios-star-outline" />
-                                                </a>
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <h3>
-                                        <a href="#">Nike Free RN 2019 iD</a>
-                                    </h3>
-                                    <div className="pricing">
-                                        <p className="price">
-                                            <span>$120.00</span>
-                                        </p>
-                                    </div>
-                                    <p className="bottom-area d-flex px-3">
-                                        <a href="#" className="add-to-cart text-center py-2 mr-1">
-                                            <span>
-                                                Add to cart <i className="ion-ios-add ml-1" />
-                                            </span>
-                                        </a>
-                                        <a href="#" className="buy-now text-center py-2">
-                                            Buy now
-                                            <span>
-                                                <i className="ion-ios-cart ml-1" />
-                                            </span>
-                                        </a>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-sm-12 col-md-6 col-lg-3 d-flex">
-                            <div className="product">
-                                <a href="#" className="img-prod">
-                                    <img
-                                        className="img-fluid"
-                                        src="https://glab.vn/storage/products/2021/10/28/480x320/617a2b017cfe3.jpg"
-                                        alt="Colorlib Template"
-                                    />
-                                    <div className="overlay" />
-                                </a>
-                                <div className="text py-3 pb-4 px-3">
-                                    <div className="d-flex">
-                                        <div className="cat">
-                                            <span>Lifestyle</span>
-                                        </div>
-                                        <div className="rating">
-                                            <p className="text-right mb-0">
-                                                <a href="#">
-                                                    <span className="ion-ios-star-outline" />
-                                                </a>
-                                                <a href="#">
-                                                    <span className="ion-ios-star-outline" />
-                                                </a>
-                                                <a href="#">
-                                                    <span className="ion-ios-star-outline" />
-                                                </a>
-                                                <a href="#">
-                                                    <span className="ion-ios-star-outline" />
-                                                </a>
-                                                <a href="#">
-                                                    <span className="ion-ios-star-outline" />
-                                                </a>
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <h3>
-                                        <a href="#">Nike Free RN 2019 iD</a>
-                                    </h3>
-                                    <div className="pricing">
-                                        <p className="price">
-                                            <span>$120.00</span>
-                                        </p>
-                                    </div>
-                                    <p className="bottom-area d-flex px-3">
-                                        <a href="#" className="add-to-cart text-center py-2 mr-1">
-                                            <span>
-                                                Add to cart <i className="ion-ios-add ml-1" />
-                                            </span>
-                                        </a>
-                                        <a href="#" className="buy-now text-center py-2">
-                                            Buy now
-                                            <span>
-                                                <i className="ion-ios-cart ml-1" />
-                                            </span>
-                                        </a>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-sm-12 col-md-6 col-lg-3 d-flex">
-                            <div className="product d-flex flex-column">
-                                <a href="#" className="img-prod">
-                                    <img
-                                        className="img-fluid"
-                                        src="https://glab.vn/storage/products/2021/10/28/480x320/617a2b017cfe3.jpg"
-                                        alt="Colorlib Template"
-                                    />
-                                    <div className="overlay" />
-                                </a>
-                                <div className="text py-3 pb-4 px-3">
-                                    <div className="d-flex">
-                                        <div className="cat">
-                                            <span>Lifestyle</span>
-                                        </div>
-                                        <div className="rating">
-                                            <p className="text-right mb-0">
-                                                <a href="#">
-                                                    <span className="ion-ios-star-outline" />
-                                                </a>
-                                                <a href="#">
-                                                    <span className="ion-ios-star-outline" />
-                                                </a>
-                                                <a href="#">
-                                                    <span className="ion-ios-star-outline" />
-                                                </a>
-                                                <a href="#">
-                                                    <span className="ion-ios-star-outline" />
-                                                </a>
-                                                <a href="#">
-                                                    <span className="ion-ios-star-outline" />
-                                                </a>
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <h3>
-                                        <a href="#">Nike Free RN 2019 iD</a>
-                                    </h3>
-                                    <div className="pricing">
-                                        <p className="price">
-                                            <span>$120.00</span>
-                                        </p>
-                                    </div>
-                                    <p className="bottom-area d-flex px-3">
-                                        <a href="#" className="add-to-cart text-center py-2 mr-1">
-                                            <span>
-                                                Add to cart <i className="ion-ios-add ml-1" />
-                                            </span>
-                                        </a>
-                                        <a href="#" className="buy-now text-center py-2">
-                                            Buy now
-                                            <span>
-                                                <i className="ion-ios-cart ml-1" />
-                                            </span>
-                                        </a>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-sm-12 col-md-6 col-lg-3 d-flex">
-                            <div className="product d-flex flex-column">
-                                <a href="#" className="img-prod">
-                                    <img
-                                        className="img-fluid"
-                                        src="https://glab.vn/storage/products/2021/10/28/480x320/617a2b017cfe3.jpg"
-                                        alt="Colorlib Template"
-                                    />
-                                    <span className="status">50% Off</span>
-                                    <div className="overlay" />
-                                </a>
-                                <div className="text py-3 pb-4 px-3">
-                                    <div className="d-flex">
-                                        <div className="cat">
-                                            <span>Lifestyle</span>
-                                        </div>
-                                        <div className="rating">
-                                            <p className="text-right mb-0">
-                                                <a href="#">
-                                                    <span className="ion-ios-star-outline" />
-                                                </a>
-                                                <a href="#">
-                                                    <span className="ion-ios-star-outline" />
-                                                </a>
-                                                <a href="#">
-                                                    <span className="ion-ios-star-outline" />
-                                                </a>
-                                                <a href="#">
-                                                    <span className="ion-ios-star-outline" />
-                                                </a>
-                                                <a href="#">
-                                                    <span className="ion-ios-star-outline" />
-                                                </a>
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <h3>
-                                        <a href="#">Nike Free RN 2019 iD</a>
-                                    </h3>
-                                    <div className="pricing">
-                                        <p className="price">
-                                            <span className="mr-2 price-dc">$120.00</span>
-                                            <span className="price-sale">$80.00</span>
-                                        </p>
-                                    </div>
-                                    <p className="bottom-area d-flex px-3">
-                                        <a href="#" className="add-to-cart text-center py-2 mr-1">
-                                            <span>
-                                                Add to cart <i className="ion-ios-add ml-1" />
-                                            </span>
-                                        </a>
-                                        <a href="#" className="buy-now text-center py-2">
-                                            Buy now
-                                            <span>
-                                                <i className="ion-ios-cart ml-1" />
-                                            </span>
-                                        </a>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-sm-12 col-md-6 col-lg-3 d-flex">
-                            <div className="product">
-                                <a href="#" className="img-prod">
-                                    <img
-                                        className="img-fluid"
-                                        src="https://glab.vn/storage/products/2021/10/28/480x320/617a2b017cfe3.jpg"
-                                        alt="Colorlib Template"
-                                    />
-                                    <div className="overlay" />
-                                </a>
-                                <div className="text py-3 pb-4 px-3">
-                                    <div className="d-flex">
-                                        <div className="cat">
-                                            <span>Lifestyle</span>
-                                        </div>
-                                        <div className="rating">
-                                            <p className="text-right mb-0">
-                                                <a href="#">
-                                                    <span className="ion-ios-star-outline" />
-                                                </a>
-                                                <a href="#">
-                                                    <span className="ion-ios-star-outline" />
-                                                </a>
-                                                <a href="#">
-                                                    <span className="ion-ios-star-outline" />
-                                                </a>
-                                                <a href="#">
-                                                    <span className="ion-ios-star-outline" />
-                                                </a>
-                                                <a href="#">
-                                                    <span className="ion-ios-star-outline" />
-                                                </a>
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <h3>
-                                        <a href="#">Nike Free RN 2019 iD</a>
-                                    </h3>
-                                    <div className="pricing">
-                                        <p className="price">
-                                            <span>$120.00</span>
-                                        </p>
-                                    </div>
-                                    <p className="bottom-area d-flex px-3">
-                                        <a href="#" className="add-to-cart text-center py-2 mr-1">
-                                            <span>
-                                                Add to cart <i className="ion-ios-add ml-1" />
-                                            </span>
-                                        </a>
-                                        <a href="#" className="buy-now text-center py-2">
-                                            Buy now
-                                            <span>
-                                                <i className="ion-ios-cart ml-1" />
-                                            </span>
-                                        </a>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-sm-12 col-md-6 col-lg-3 d-flex">
-                            <div className="product">
-                                <a href="#" className="img-prod">
-                                    <img
-                                        className="img-fluid"
-                                        src="https://glab.vn/storage/products/2021/10/28/480x320/617a2b017cfe3.jpg"
-                                        alt="Colorlib Template"
-                                    />
-                                    <div className="overlay" />
-                                </a>
-                                <div className="text py-3 pb-4 px-3">
-                                    <div className="d-flex">
-                                        <div className="cat">
-                                            <span>Lifestyle</span>
-                                        </div>
-                                        <div className="rating">
-                                            <p className="text-right mb-0">
-                                                <a href="#">
-                                                    <span className="ion-ios-star-outline" />
-                                                </a>
-                                                <a href="#">
-                                                    <span className="ion-ios-star-outline" />
-                                                </a>
-                                                <a href="#">
-                                                    <span className="ion-ios-star-outline" />
-                                                </a>
-                                                <a href="#">
-                                                    <span className="ion-ios-star-outline" />
-                                                </a>
-                                                <a href="#">
-                                                    <span className="ion-ios-star-outline" />
-                                                </a>
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <h3>
-                                        <a href="#">Nike Free RN 2019 iD</a>
-                                    </h3>
-                                    <div className="pricing">
-                                        <p className="price">
-                                            <span>$120.00</span>
-                                        </p>
-                                    </div>
-                                    <p className="bottom-area d-flex px-3">
-                                        <a href="#" className="add-to-cart text-center py-2 mr-1">
-                                            <span>
-                                                Add to cart <i className="ion-ios-add ml-1" />
-                                            </span>
-                                        </a>
-                                        <a href="#" className="buy-now text-center py-2">
-                                            Buy now
-                                            <span>
-                                                <i className="ion-ios-cart ml-1" />
-                                            </span>
-                                        </a>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            <section className="ftco-section ftco-choose ftco-no-pb ftco-no-pt">
-                <div className="container">
-                    <div className="row no-gutters">
-                        <div className="col-lg-4">
-                            <div
-                                className="choose-wrap divider-one img p-5 d-flex align-items-end"
-                                style={{ backgroundImage: "url(images/choose-1.jpg)" }}
-                            >
-                                <div className="text text-center text-white px-2">
-                                    <span className="subheading">Men's Shoes</span>
-                                    <h2>Men's Collection</h2>
-                                    <p>
-                                        Separated they live in Bookmarksgrove right at the coast of the
-                                        Semantics, a large language ocean.
-                                    </p>
-                                    <p>
-                                        <a href="#" className="btn btn-black px-3 py-2">
-                                            Shop now
-                                        </a>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-lg-8">
-                            <div className="row no-gutters choose-wrap divider-two align-items-stretch">
-                                <div className="col-md-12">
-                                    <div
-                                        className="choose-wrap full-wrap img align-self-stretch d-flex align-item-center justify-content-end"
-                                        style={{ backgroundImage: "url(images/choose-2.jpg)" }}
-                                    >
-                                        <div className="col-md-7 d-flex align-items-center">
-                                            <div className="text text-white px-5">
-                                                <span className="subheading">Women's Shoes</span>
-                                                <h2>Women's Collection</h2>
-                                                <p>
-                                                    Separated they live in Bookmarksgrove right at the coast
-                                                    of the Semantics, a large language ocean.
-                                                </p>
-                                                <p>
-                                                    <a href="#" className="btn btn-black px-3 py-2">
-                                                        Shop now
+                                    </NavLink>
+
+                                    <div className="text py-3 pb-4 px-3">
+                                        <div className="d-flex">
+                                            <div className="cat">
+
+                                            </div>
+                                            <div className="rating">
+                                                <p className="text-right mb-0">
+                                                    <a href="#">
+                                                        <span className="ion-ios-star-outline" />
+                                                    </a>
+                                                    <a href="#">
+                                                        <span className="ion-ios-star-outline" />
+                                                    </a>
+                                                    <a href="#">
+                                                        <span className="ion-ios-star-outline" />
+                                                    </a>
+                                                    <a href="#">
+                                                        <span className="ion-ios-star-outline" />
+                                                    </a>
+                                                    <a href="#">
+                                                        <span className="ion-ios-star-outline" />
                                                     </a>
                                                 </p>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <div className="col-md-12">
-                                    <div className="row no-gutters">
-                                        <div className="col-md-6">
-                                            <div className="choose-wrap wrap img align-self-stretch bg-light d-flex align-items-center">
-                                                <div className="text text-center px-5">
-                                                    <span className="subheading">Summer Sale</span>
-                                                    <h2>Extra 50% Off</h2>
-                                                    <p>
-                                                        Separated they live in Bookmarksgrove right at the coast
-                                                        of the Semantics, a large language ocean.
-                                                    </p>
-                                                    <p>
-                                                        <a href="#" className="btn btn-black px-3 py-2">
-                                                            Shop now
-                                                        </a>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="col-md-6">
-                                            <div
-                                                className="choose-wrap wrap img align-self-stretch d-flex align-items-center"
-                                                style={{ backgroundImage: "url(images/choose-3.jpg)" }}
-                                            >
-                                                <div className="text text-center text-white px-5">
-                                                    <span className="subheading">Shoes</span>
-                                                    <h2>Best Sellers</h2>
-                                                    <p>
-                                                        Separated they live in Bookmarksgrove right at the coast
-                                                        of the Semantics, a large language ocean.
-                                                    </p>
-                                                    <p>
-                                                        <a href="#" className="btn btn-black px-3 py-2">
-                                                            Shop now
-                                                        </a>
-                                                    </p>
-                                                </div>
-                                            </div>
+                                        <h3>
+                                            <span>{value.nameProduct}</span>
+                                        </h3>
+                                        <div className="pricing">
+                                            <p className="price">
+                                                <span style={{ fontFamily: "Cabin" }}>đ {new Intl.NumberFormat().format(value.price)}</span>
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        ))}
+                    
                     </div>
+
                 </div>
+
+
             </section>
+
             <section className="ftco-section ftco-deal bg-primary">
                 <div className="container">
                     <div className="row">
                         <div className="col-md-6">
-                            <img src="https://themewagon.github.io/minishop/images/prod-1.png" className="img-fluid" alt="" />
+                            <img style={{ width: "250%" }} src="https://o.remove.bg/downloads/3cdc642b-02d2-4ddf-a43d-8ff04c38abd3/one-removebg-preview.png" className="img-fluid" alt="" />
                         </div>
                         <div className="col-md-6">
                             <div className="heading-section heading-section-white">
@@ -687,7 +206,7 @@ export function Home() {
                             </div>
                             <div className="text-deal">
                                 <h2>
-                                    <a href="#">Nike Free RN 2019 iD</a>
+                                    <a href="#">Nike Free RN 2019 </a>
                                 </h2>
                                 <p className="price">
                                     <span className="mr-2 price-dc">$120.00</span>
@@ -696,15 +215,15 @@ export function Home() {
                                 <ul className="thumb-deal d-flex mt-4">
                                     <li
                                         className="img"
-                                        style={{ backgroundImage: "url(https://themewagon.github.io/minishop/images/prod-1.png)" }}
+                                        style={{ backgroundImage: "url(https://o.remove.bg/downloads/4b7f4336-8f19-45ca-8490-ad6779b93c87/jd1-removebg-preview.png)" }}
                                     />
                                     <li
                                         className="img"
-                                        style={{ backgroundImage: "url(https://themewagon.github.io/minishop/images/prod-1.png)" }}
+                                        style={{ backgroundImage: "url(https://o.remove.bg/downloads/4f87cb20-da72-4978-954f-cfaaf4af8a10/jd2-removebg-preview.png)" }}
                                     />
                                     <li
                                         className="img"
-                                        style={{ backgroundImage: "url(https://themewagon.github.io/minishop/images/prod-1.png)" }}
+                                        style={{ backgroundImage: "url(https://o.remove.bg/downloads/520d1286-34cb-409a-802c-3ff79700f334/jd3-removebg-preview.png)" }}
                                     />
                                 </ul>
                             </div>
@@ -712,177 +231,7 @@ export function Home() {
                     </div>
                 </div>
             </section>
-            <section className="ftco-section testimony-section">
-                <div className="container">
-                    <div className="row">
-                        <div className="col-lg-5">
-                            <div className="services-flow">
-                                <div className="services-2 p-4 d-flex ">
-                                    <div className="icon">
-                                        <span className="flaticon-bag" />
-                                    </div>
-                                    <div className="text">
-                                        <h3>Free Shipping</h3>
-                                        <p className="mb-0">
-                                            Separated they live in. A small river named Duden flows
-                                        </p>
-                                    </div>
-                                </div>
-                                <div className="services-2 p-4 d-flex ">
-                                    <div className="icon">
-                                        <span className="flaticon-heart-box" />
-                                    </div>
-                                    <div className="text">
-                                        <h3>Valuable Gifts</h3>
-                                        <p className="mb-0">
-                                            Separated they live in. A small river named Duden flows
-                                        </p>
-                                    </div>
-                                </div>
-                                <div className="services-2 p-4 d-flex ">
-                                    <div className="icon">
-                                        <span className="flaticon-payment-security" />
-                                    </div>
-                                    <div className="text">
-                                        <h3>All Day Support</h3>
-                                        <p className="mb-0">
-                                            Separated they live in. A small river named Duden flows
-                                        </p>
-                                    </div>
-                                </div>
-                                <div className="services-2 p-4 d-flex ">
-                                    <div className="icon">
-                                        <span className="flaticon-customer-service" />
-                                    </div>
-                                    <div className="text">
-                                        <h3>All Day Support</h3>
-                                        <p className="mb-0">
-                                            Separated they live in. A small river named Duden flows
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-lg-7">
-                            <div className="heading-section  mb-5">
-                                <h2 className="mb-4">Our satisfied customer says</h2>
-                                <p>
-                                    Far far away, behind the word mountains, far from the countries
-                                    Vokalia and Consonantia, there live the blind texts. Separated
-                                    they live in
-                                </p>
-                            </div>
-                            <div className="carousel-testimony owl-carousel">
-                                <div className="item">
-                                    <div className="testimony-wrap">
-                                        <div
-                                            className="user-img mb-4"
-                                            style={{ backgroundImage: "url(images/person_1.jpg)" }}
-                                        >
-                                            <span className="quote d-flex align-items-center justify-content-center">
-                                                <i className="icon-quote-left" />
-                                            </span>
-                                        </div>
-                                        <div className="text">
-                                            <p className="mb-4 pl-4 line">
-                                                Far far away, behind the word mountains, far from the
-                                                countries Vokalia and Consonantia, there live the blind
-                                                texts.
-                                            </p>
-                                            <p className="name">Garreth Smith</p>
-                                            <span className="position">Marketing Manager</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="item">
-                                    <div className="testimony-wrap">
-                                        <div
-                                            className="user-img mb-4"
-                                            style={{ backgroundImage: "url(images/person_2.jpg)" }}
-                                        >
-                                            <span className="quote d-flex align-items-center justify-content-center">
-                                                <i className="icon-quote-left" />
-                                            </span>
-                                        </div>
-                                        <div className="text">
-                                            <p className="mb-4 pl-4 line">
-                                                Far far away, behind the word mountains, far from the
-                                                countries Vokalia and Consonantia, there live the blind
-                                                texts.
-                                            </p>
-                                            <p className="name">Garreth Smith</p>
-                                            <span className="position">Interface Designer</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="item">
-                                    <div className="testimony-wrap">
-                                        <div
-                                            className="user-img mb-4"
-                                            style={{ backgroundImage: "url(images/person_3.jpg)" }}
-                                        >
-                                            <span className="quote d-flex align-items-center justify-content-center">
-                                                <i className="icon-quote-left" />
-                                            </span>
-                                        </div>
-                                        <div className="text">
-                                            <p className="mb-4 pl-4 line">
-                                                Far far away, behind the word mountains, far from the
-                                                countries Vokalia and Consonantia, there live the blind
-                                                texts.
-                                            </p>
-                                            <p className="name">Garreth Smith</p>
-                                            <span className="position">UI Designer</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="item">
-                                    <div className="testimony-wrap">
-                                        <div
-                                            className="user-img mb-4"
-                                            style={{ backgroundImage: "url(images/person_1.jpg)" }}
-                                        >
-                                            <span className="quote d-flex align-items-center justify-content-center">
-                                                <i className="icon-quote-left" />
-                                            </span>
-                                        </div>
-                                        <div className="text">
-                                            <p className="mb-4 pl-4 line">
-                                                Far far away, behind the word mountains, far from the
-                                                countries Vokalia and Consonantia, there live the blind
-                                                texts.
-                                            </p>
-                                            <p className="name">Garreth Smith</p>
-                                            <span className="position">Web Developer</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="item">
-                                    <div className="testimony-wrap">
-                                        <div
-                                            className="user-img mb-4"
-                                            style={{ backgroundImage: "url(images/person_1.jpg)" }}
-                                        >
-                                            <span className="quote d-flex align-items-center justify-content-center">
-                                                <i className="icon-quote-left" />
-                                            </span>
-                                        </div>
-                                        <div className="text">
-                                            <p className="mb-4 pl-4 line">
-                                                Far far away, behind the word mountains, far from the
-                                                countries Vokalia and Consonantia, there live the blind
-                                                texts.
-                                            </p>
-                                            <p className="name">Garreth Smith</p>
-                                            <span className="position">System Analyst</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+
             <section className="ftco-gallery">
                 <div className="container">
                     <div className="row justify-content-center">
@@ -900,9 +249,9 @@ export function Home() {
                     <div className="row no-gutters">
                         <div className="col-md-4 col-lg-2 ">
                             <a
-                                href="images/gallery-1.jpg"
+                                href="https://themewagon.github.io/minishop/images/gallery-1.jpg"
                                 className="gallery image-popup img d-flex align-items-center"
-                                style={{ backgroundImage: "url(images/gallery-1.jpg)" }}
+                                style={{ backgroundImage: "url(https://themewagon.github.io/minishop/images/gallery-1.jpg)" }}
                             >
                                 <div className="icon mb-4 d-flex align-items-center justify-content-center">
                                     <span className="icon-instagram" />
@@ -911,9 +260,9 @@ export function Home() {
                         </div>
                         <div className="col-md-4 col-lg-2 ">
                             <a
-                                href="images/gallery-2.jpg"
+                                href="https://themewagon.github.io/minishop/images/gallery-2.jpg"
                                 className="gallery image-popup img d-flex align-items-center"
-                                style={{ backgroundImage: "url(images/gallery-2.jpg)" }}
+                                style={{ backgroundImage: "url(https://themewagon.github.io/minishop/images/gallery-2.jpg)" }}
                             >
                                 <div className="icon mb-4 d-flex align-items-center justify-content-center">
                                     <span className="icon-instagram" />
@@ -922,9 +271,9 @@ export function Home() {
                         </div>
                         <div className="col-md-4 col-lg-2 ">
                             <a
-                                href="images/gallery-3.jpg"
+                                href="https://themewagon.github.io/minishop/images/gallery-3.jpg"
                                 className="gallery image-popup img d-flex align-items-center"
-                                style={{ backgroundImage: "url(images/gallery-3.jpg)" }}
+                                style={{ backgroundImage: "url(https://themewagon.github.io/minishop/images/gallery-3.jpg)" }}
                             >
                                 <div className="icon mb-4 d-flex align-items-center justify-content-center">
                                     <span className="icon-instagram" />
@@ -933,9 +282,9 @@ export function Home() {
                         </div>
                         <div className="col-md-4 col-lg-2 ">
                             <a
-                                href="images/gallery-4.jpg"
+                                href="https://themewagon.github.io/minishop/images/gallery-4.jpg"
                                 className="gallery image-popup img d-flex align-items-center"
-                                style={{ backgroundImage: "url(images/gallery-4.jpg)" }}
+                                style={{ backgroundImage: "url(https://themewagon.github.io/minishop/images/gallery-4.jpg)" }}
                             >
                                 <div className="icon mb-4 d-flex align-items-center justify-content-center">
                                     <span className="icon-instagram" />
@@ -944,9 +293,9 @@ export function Home() {
                         </div>
                         <div className="col-md-4 col-lg-2 ">
                             <a
-                                href="images/gallery-5.jpg"
+                                href="https://themewagon.github.io/minishop/images/gallery-5.jpg"
                                 className="gallery image-popup img d-flex align-items-center"
-                                style={{ backgroundImage: "url(images/gallery-5.jpg)" }}
+                                style={{ backgroundImage: "url(https://themewagon.github.io/minishop/images/gallery-5.jpg)" }}
                             >
                                 <div className="icon mb-4 d-flex align-items-center justify-content-center">
                                     <span className="icon-instagram" />
@@ -955,9 +304,9 @@ export function Home() {
                         </div>
                         <div className="col-md-4 col-lg-2 ">
                             <a
-                                href="images/gallery-6.jpg"
+                                href="https://themewagon.github.io/minishop/images/gallery-6.jpg"
                                 className="gallery image-popup img d-flex align-items-center"
-                                style={{ backgroundImage: "url(images/gallery-6.jpg)" }}
+                                style={{ backgroundImage: "url(https://themewagon.github.io/minishop/images/gallery-6.jpg)" }}
                             >
                                 <div className="icon mb-4 d-flex align-items-center justify-content-center">
                                     <span className="icon-instagram" />
@@ -981,7 +330,8 @@ export function Home() {
                     <div className="row mb-5">
                         <div className="col-md">
                             <div className="ftco-footer-widget mb-4">
-                                <h2 className="ftco-heading-2">Minishop</h2>
+                                <h2 className="ftco-heading-2">HypeSneaker</h2>
+
                                 <p>
                                     Far far away, behind the word mountains, far from the countries
                                     Vokalia and Consonantia.
@@ -1116,7 +466,7 @@ export function Home() {
                     </div>
                 </div>
             </footer>
-      
+
         </>
 
     )
