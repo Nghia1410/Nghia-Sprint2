@@ -30,39 +30,17 @@ export function Login() {
         setShowPassword((pre) => !pre);
     }
 
-    const handleEmail = async () => {
-        const email = document.querySelector(".email-password").value;
-        let genenicRequest = {
-            emailConfirm: email,
-            location: window.location.origin,
-        }
-        getEmail(genenicRequest)
-            .then((e) => {
-                document.cookie = "token=" + e.data.token;
-                console.log(e.data.token);
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Gửi email thành công',
-                    showConfirmButton: false,
-                    timer: 1500
-                })
-            })
-            .catch(() => {
-                setFailedAccount("Email không hợp lệ")
-            })
-    }
-
     if (!!sessionStorage.getItem("TOKEN")) {
         navigate('/');
         return null;
     }
 
     return (
-        <div className="container" id="loginPage">
-            <div className="content row w-500">
-                <div className="content-right col-lg-6 col-md-12 col-sm-12">
+        <div  id="loginPage">
+            <div className="">
+                <div className=" ">
                 </div>
-                <div className="content-left col-lg-6 col-md-12 col-sm-12 m-auto">
+                <div className="">
                     <h1 className="text-center mb-5">Đăng nhập</h1>
                     <Formik
                         initialValues={{
@@ -119,41 +97,6 @@ export function Login() {
                         </Form>
                     </Formik>
 
-                </div>
-            </div>
-            <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel"
-                 aria-hidden="true">
-                <div className="modal-dialog">
-                    <div className="modal-content bg-modal">
-                        <div className="modal-header">
-                            <h5 className="modal-title text-dark" id="exampleModalLabel"><h3 className="text-modal">Lấy
-                                mật khẩu</h3></h5>
-                            <button type="button" className="btn-close" data-bs-dismiss="modal"
-                                    aria-label="Close"/>
-                        </div>
-                        <div className="modal-body">
-                            <div className="mb-3">
-                                <label htmlFor="exampleFormControlInput1"
-                                       className="form-label text-secondary">Email <sup className="text-danger">*</sup></label>
-                                <input type="email" className="form-control text-dark email-password"
-                                       id="exampleFormControlInput1" placeholder="nhập email..."/>
-                                <div id="emailHelp" className="form-text">Chúng tôi sẽ gửi mật khẩu qua email của bạn.
-                                </div>
-                                {failedAccount && (
-                                    <span className="text-danger col-12">{failedAccount}</span>
-                                )}
-                            </div>
-                        </div>
-                        <div className="modal-footer">
-                            <button type="button" className="btn button btn-secondary bg-secondary text-capitalize"
-                                    data-bs-dismiss="modal">Hủy
-                            </button>
-                            <button type="button" className="btn button btn-success text-capitalize" onClick={() => {
-                                handleEmail()
-                            }}>Gửi
-                            </button>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>

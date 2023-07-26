@@ -1,13 +1,53 @@
-import axios from "axios";
 import * as productService from "../service/productService"
 import React, { useEffect, useState } from "react"
-import { NavLink } from "react-router-dom";
+import * as Cart from "../component/Cart"
 
 export function Shop() {
+
+  const [cartItems, setCartItems] = useState([]);
   const [productType, setProductType] = useState([])
   const [product, setProduct] = useState([]);
   const [itemsToShow, setItemsToShow] = useState(9); // Số sản phẩm hiển thị ban đầu
   const [itemsPerLoad, setItemsPerLoad] = useState(3);
+
+  const displayListProduct = async () => {
+    const res = await productService.findAllProduct();
+    setProduct(res);
+  };
+
+  const addToCart = (product) => {
+    // Check if the product already exists in the cart
+    const existingItem = cartItems.find((item) => item.id === product.id);
+
+    if (existingItem) {
+      // If the product already exists, update its quantity
+      const updatedItems = cartItems.map((item) =>
+        item.id === product.id
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
+      );
+      setCartItems(updatedItems);
+    } else {
+      // If the product doesn't exist, add it to the cart
+      setCartItems([...cartItems, { ...product, quantity: 1 }]);
+    }
+  };
+
+  const handleAddToCart = (product) => {
+    // Check if the product already exists in the cart
+    const existingProduct = cartItems.find(item => item.id === product.id);
+    if (existingProduct) {
+      // If the product exists, update its quantity
+      const updatedCart = cartItems.map(item =>
+        item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+      );
+      setCartItems(updatedCart);
+    } else {
+      // If the product doesn't exist, add it to the cart with quantity 1
+      setCartItems([...cartItems, { ...product, quantity: 1 }]);
+    }
+  };
+
 
   const handleDisplayByType = async (type) => {
     const res = await productService.getAllProductByType(type);
@@ -34,65 +74,6 @@ export function Shop() {
   };
   return (
     <>
-
-      <nav
-        className="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light"
-        id="ftco-navbar"
-      >
-        <div className="container">
-          <a className="navbar-brand" href="/">
-            HypeSneaker
-          </a>
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-toggle="collapse"
-            data-target="#ftco-nav"
-            aria-controls="ftco-nav"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="oi oi-menu" /> Menu
-          </button>
-          <div className="collapse navbar-collapse" id="ftco-nav">
-            <ul className="navbar-nav ml-auto">
-              <li className="nav-item">
-                <a href="/" className="nav-link">
-                  Home
-                </a>
-              </li>
-              <li className="nav-item">
-                <a href="/shop" className="nav-link">
-                  Shop
-                </a>
-              </li>
-              <li className="nav-item">
-                <a href="about.html" className="nav-link">
-                  About
-                </a>
-              </li>
-              <li className="nav-item cta cta-colored">
-                <a href="cart.html" className="nav-link">
-                  <span className="icon-shopping_cart" />
-                  [0]
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-      {/* END nav */}
-      {/* <div
-        className="hero-wrap hero-bread"
-        style={{ backgroundImage: 'url("https://hsvheartmds.com/wp-content/uploads/2016/12/stock-photo-medical-blurred-background-395854618.jpg")' }}
-      >
-        <div className="container">
-          <div className="row no-gutters slider-text align-items-center justify-content-center">
-            <div className="col-md-9 ftco-animate text-center">
-            </div>
-          </div>
-        </div>
-      </div> */}
 
       <div
         className="hero-wrap hero-bread"
@@ -179,11 +160,12 @@ export function Shop() {
                           </p>
                         </div>
                         <p className="bottom-area d-flex px-3">
-                          <a href="#" className="add-to-cart text-center py-2 mr-1">
+                          <a href="#" className="add-to-cart text-center py-2 mr-1" onClick={() => handleAddToCart(value)}>
                             <span>
                               Add to cart <i className="ion-ios-add ml-1" />
                             </span>
                           </a>
+
                           <a href="#" className="buy-now text-center py-2">
                             Buy now
                             <span>
@@ -212,54 +194,41 @@ export function Shop() {
               <div className="sidebar">
                 <div className="sidebar-box-2">
                   <h2 className="heading" style={{ color: "black" }}>Categories</h2>
-                  {/* {productType?.map((value, index) => (
-                    <div className="fancy-collapse-panel" key={index}>
-                      <div
-                        className="panel-group"
-                        id="accordion"
-                        role="tablist"
-                        aria-multiselectable="true"
-                      >
-                        <div className="panel panel-default">
-                          <div className="panel-heading" role="tab" id="headingOne">
-                            <h4>
-                              <a>
-                              onClick={() => handleDisplayByType(value.nameType)}
-                            
-                              </a>
-                            </h4>
-                          </div>
-                        </div>
 
-
-
-                      </div>
-                    </div>
-                  ))} */}
-
+                  <div className="item">
+                    <a
+                      href=""
+                      className="link flex"
+                      onClick={() => displayListProduct()}
+                    >
+                      <i className="bx bx-grid-alt"></i>
+                      <span>Tất cả</span>
+                    </a>
+                  </div>
                   {productType.map((value, index) => {
                     return (
                       <div className="fancy-collapse-panel" key={index}>
                         <div
-                        className="panel-group"
-                        id="accordion"
-                        role="tablist"
-                        aria-multiselectable="true"
-                      >
-                         <div className="panel panel-default">
-                          <div className="panel-heading" role="tab" id="headingOne">
-                        <a
-                          href="#"
-                          className="link flex"
-                          onClick={() => handleDisplayByType(value.idType)}
-                        //   name="type"
+                          className="panel-group"
+                          id="accordion"
+                          role="tablist"
+                          aria-multiselectable="true"
                         >
-                          <i className="bx bx-home-alt"></i>
-                          <span>{value.nameType}</span>
-                        </a>
-                      </div>
-                      </div>
-                      </div>
+                          <div className="panel panel-default">
+                            <div >
+                              <a
+                             
+                                href="#"
+                                className="link flex"
+                                onClick={() => handleDisplayByType(value.idType)}
+                              
+                              >
+                                <i className="bx bx-home-alt"></i>
+                                <span>{value.nameType}</span>
+                              </a>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     );
                   })}
@@ -316,6 +285,7 @@ export function Shop() {
           </div>
         </div>
       </section>
+      {/* <Cart cartItems={cartItems} /> */}
       <section className="ftco-gallery">
         <div className="container">
           <div className="row justify-content-center">
@@ -414,7 +384,7 @@ export function Shop() {
           <div className="row mb-5">
             <div className="col-md">
               <div className="ftco-footer-widget mb-4">
-                <h2 className="ftco-heading-2">Minishop</h2>
+                <h2 className="ftco-heading-2">HypeSneaker</h2>
                 <p>
                   Far far away, behind the word mountains, far from the countries
                   Vokalia and Consonantia.

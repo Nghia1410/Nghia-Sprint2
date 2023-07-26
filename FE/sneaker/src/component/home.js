@@ -21,7 +21,7 @@ export function Home() {
         <>
 
             <div>
-                <nav
+                {/* <nav
                     className="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light"
                     id="ftco-navbar"
                 >
@@ -63,7 +63,7 @@ export function Home() {
                                 </li>
 
                                 <li className="nav-item cta cta-colored">
-                                    <a href="cart.html" className="nav-link">
+                                    <a href="/cart" className="nav-link">
                                         <span className="icon-shopping_cart" />
                                         [0]
                                     </a>
@@ -74,7 +74,7 @@ export function Home() {
                         </div>
                     </div>
 
-                </nav>
+                </nav> */}
 
                 {/* END nav */}
             </div>
@@ -137,7 +137,7 @@ export function Home() {
                                     <NavLink to={`/detail/${value.idProduct}`}>
                                         <a className="img-prod">
                                             <img src={value.image} className="slide_img" />
-                                            <img style={{ width: "70px", marginLeft: "200px", marginTop: "20px" }} src="https://o.remove.bg/downloads/ea9e98f9-2441-42c7-9635-6172d4f4d58e/new-removebg-preview__1_-removebg-preview.png" className="news_label" />
+                                            <img style={{ width: "70px", marginLeft: "200px", marginTop: "20px" }} src="https://o.remove.bg/downloads/2795fc41-b7cf-44b5-a434-7892c8ccfb1b/new-removebg-preview.png" className="news_label" />
                                             <div className="overlay" />
                                         </a>
                                     </NavLink>
@@ -191,7 +191,7 @@ export function Home() {
                 <div className="container">
                     <div className="row">
                         <div className="col-md-6">
-                            <img style={{ width: "250%" }} src="https://o.remove.bg/downloads/3cdc642b-02d2-4ddf-a43d-8ff04c38abd3/one-removebg-preview.png" className="img-fluid" alt="" />
+                            <img style={{ width: "250%" }} src="https://o.remove.bg/downloads/b3ae4890-56b3-4221-a572-be541464b6e4/one-removebg-preview.png" className="img-fluid" alt="" />
                         </div>
                         <div className="col-md-6">
                             <div className="heading-section heading-section-white">

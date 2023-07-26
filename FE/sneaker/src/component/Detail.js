@@ -4,25 +4,22 @@ import { useParams } from "react-router";
 
 export function Detail() {
     const [product, setProduct] = useState({})
-    const [listProduct, setListProduct] = useState(null)
     const param = useParams()
-  
+
 
     console.log(product);
 
     useEffect(() => {
         const fetchApi = async () => {
-            const result = await productService.findAllProduct();
             const result1 = await productService.findProductById(param.id)
-            setListProduct(result)
             setProduct(result1)
         }
         fetchApi()
     }, [param.id])
 
     return (
-        product && listProduct && <>
-            <nav
+           <>
+            {/* <nav
                 className="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light"
                 id="ftco-navbar"
             >
@@ -69,41 +66,41 @@ export function Detail() {
                         </ul>
                     </div>
                 </div>
-            </nav>
+            </nav> */}
             {/* END nav */}
             <div
                 className="hero-wrap hero-bread"
                 style={{
                     backgroundImage: 'url("https://hsvheartmds.com/wp-content/uploads/2016/12/stock-photo-medical-blurred-background-395854618.jpg")',
-                  }}
+                }}
             >
-              <div className="container">
-    <div className="row no-gutters slider-text align-items-center justify-content-center">
-      <div className="col-md-9 text-center">
-        <h1
-          style={{
-            position: 'absolute', // Đặt vị trí của phần tử chữ SHOP là absolute
-            top: '50%', // Đặt phần tử chữ SHOP ở giữa theo chiều dọc
-            left: '50%', // Đặt phần tử chữ SHOP ở giữa theo chiều ngang
-            transform: 'translate(-50%, -50%)', // Để căn giữa chữ SHOP
-            fontSize: '4rem', // Đặt kích thước chữ SHOP
-            fontWeight: 'bold', // Đặt độ đậm cho chữ SHOP
-            fontFamily:"fantasy"
-          }}
-        >
-          D E T A i l
-        </h1>
-      </div>
-    </div>
-    </div>
+                <div className="container">
+                    <div className="row no-gutters slider-text align-items-center justify-content-center">
+                        <div className="col-md-9 text-center">
+                            <h1
+                                style={{
+                                    position: 'absolute', // Đặt vị trí của phần tử chữ SHOP là absolute
+                                    top: '50%', // Đặt phần tử chữ SHOP ở giữa theo chiều dọc
+                                    left: '50%', // Đặt phần tử chữ SHOP ở giữa theo chiều ngang
+                                    transform: 'translate(-50%, -50%)', // Để căn giữa chữ SHOP
+                                    fontSize: '4rem', // Đặt kích thước chữ SHOP
+                                    fontWeight: 'bold', // Đặt độ đậm cho chữ SHOP
+                                    fontFamily: "fantasy"
+                                }}
+                            >
+                                D E T A i l
+                            </h1>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             {<section>
                 <div className="container">
                     <div className="row">
-                        <div className="col-lg-6 mb-5 ">
-                            <a href={product.image}>
-                                <img
+                        <div className="col-lg-6 mb-5 mt-5">
+                            <a >
+                                <img style={{ width: "100%" }}
                                     src={product.image}
                                     className="img-fluid"
                                     alt="Colorlib Template"
@@ -277,7 +274,7 @@ export function Detail() {
                                     aria-labelledby="day-1-tab"
                                 >
                                     <div className="p-4">
-                                        <h3 className="mb-4">Nike Free RN 2019 iD</h3>
+                                        <h3 className="mb-4">{product.nameProduct}</h3>
                                         <p>
                                             On her way she met a copy. The copy warned the Little Blind
                                             Text, that where it came from it would have been rewritten a
@@ -298,7 +295,7 @@ export function Detail() {
                                     aria-labelledby="v-pills-day-2-tab"
                                 >
                                     <div className="p-4">
-                                        <h3 className="mb-4">Manufactured By Nike</h3>
+                                        <h3 className="mb-4">{product.nameProduct}</h3>
                                         <p>
                                             On her way she met a copy. The copy warned the Little Blind
                                             Text, that where it came from it would have been rewritten a
@@ -496,7 +493,7 @@ export function Detail() {
                     <div className="row mb-5">
                         <div className="col-md">
                             <div className="ftco-footer-widget mb-4">
-                                <h2 className="ftco-heading-2">Minishop</h2>
+                                <h2>Hype Sneaker</h2>
                                 <p>
                                     Far far away, behind the word mountains, far from the countries
                                     Vokalia and Consonantia.

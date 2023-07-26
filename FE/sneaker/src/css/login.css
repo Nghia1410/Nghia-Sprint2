@@ -1,8 +1,4 @@
 
-
-/*@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,700;1,400&display=swap');*/
-
-
 *{
     padding: 0;
     margin: 0;
@@ -17,9 +13,9 @@
     color: silver;
 }
 
-#loginPage .bg-modal {
+/* #loginPage .bg-modal {
     background-color: #FDF0D3 !important;
-}
+} */
 
 #loginPage .text-modal {
     color: #AA803B;
@@ -76,18 +72,18 @@
 #loginPage form {
     margin: 0 40px;
 }
-#loginPage .modal-header {
+/* #loginPage .modal-header {
     border-bottom: none !important;
-}
+} */
 
-.modal-footer {
+/* .modal-footer {
     border-top: none !important;
 }
 
 .modal-body {
     padding: 0 1rem !important;
-}
-
+} */
+/* 
 #loginPage span.password-icon {
     color: black !important;
     display: flex;
@@ -96,7 +92,7 @@
     right: 10px;
     top:10px;
     z-index: 88;
-}
+} */
 
 
 #loginPage .button {
