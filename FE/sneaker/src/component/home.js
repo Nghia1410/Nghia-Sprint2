@@ -21,60 +21,60 @@ export function Home() {
         <>
 
             <div>
-                {/* <nav
-                    className="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light"
-                    id="ftco-navbar"
-                >
-                    <div className="container">
-                        <a className="navbar-brand" href="/">
-                            HypeSneaker
-                        </a>
-                        <button
-                            className="navbar-toggler"
-                            type="button"
-                            data-toggle="collapse"
-                            data-target="#ftco-nav"
-                            aria-controls="ftco-nav"
-                            aria-expanded="false"
-                            aria-label="Toggle navigation"
-                        >
-                            <span className="oi oi-menu" /> Menu
-                        </button>
-                        <div className="collapse navbar-collapse" id="ftco-nav">
-                            <ul className="navbar-nav ml-auto">
-                                <li className="nav-item active">
-                                    <a href="/" className="nav-link">
-                                        Home
-                                    </a>
-                                </li>
-                                <li className="nav-item dropdown">
-                                    <a
-                                        className="nav-link "
-                                        href="/shop"
-                                    >
-                                        Shop
-                                    </a>
+                    {/* <nav
+                        className="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light"
+                        id="ftco-navbar"
+                    >
+                        <div className="container">
+                            <a className="navbar-brand" href="/">
+                                HypeSneaker
+                            </a>
+                            <button
+                                className="navbar-toggler"
+                                type="button"
+                                data-toggle="collapse"
+                                data-target="#ftco-nav"
+                                aria-controls="ftco-nav"
+                                aria-expanded="false"
+                                aria-label="Toggle navigation"
+                            >
+                                <span className="oi oi-menu" /> Menu
+                            </button>
+                            <div className="collapse navbar-collapse" id="ftco-nav">
+                                <ul className="navbar-nav ml-auto">
+                                    <li className="nav-item active">
+                                        <a href="/" className="nav-link">
+                                            Home
+                                        </a>
+                                    </li>
+                                    <li className="nav-item dropdown">
+                                        <a
+                                            className="nav-link "
+                                            href="/shop"
+                                        >
+                                            Shop
+                                        </a>
 
-                                </li>
-                                <li className="nav-item">
-                                    <a href="about.html" className="nav-link">
-                                        About
-                                    </a>
-                                </li>
+                                    </li>
+                                    <li className="nav-item">
+                                        <a href="about.html" className="nav-link">
+                                            About
+                                        </a>
+                                    </li>
 
-                                <li className="nav-item cta cta-colored">
-                                    <a href="/cart" className="nav-link">
-                                        <span className="icon-shopping_cart" />
-                                        [0]
-                                    </a>
-                                </li>
+                                    <li className="nav-item cta cta-colored">
+                                        <a href="/cart" className="nav-link">
+                                            <span className="icon-shopping_cart" />
+                                            [0]
+                                        </a>
+                                    </li>
 
 
-                            </ul>
+                                </ul>
+                            </div>
                         </div>
-                    </div>
 
-                </nav> */}
+                    </nav> */}
 
                 {/* END nav */}
             </div>
@@ -134,10 +134,10 @@ export function Home() {
 
                             <div className="col-sm-12 col-md-6 col-lg-3 d-flex" key={index}>
                                 <div className="product d-flex flex-column">
-                                    <NavLink to={`/detail/${value.idProduct}`}>
+                                    <NavLink to={`/detail/${value.productId}`}>
                                         <a className="img-prod">
                                             <img src={value.image} className="slide_img" />
-                                            <img style={{ width: "70px", marginLeft: "200px", marginTop: "20px" }} src="https://o.remove.bg/downloads/2795fc41-b7cf-44b5-a434-7892c8ccfb1b/new-removebg-preview.png" className="news_label" />
+                                            <img style={{ width: "70px", marginLeft: "200px", marginTop: "20px" }} src="https://o.remove.bg/downloads/f1780687-1966-4425-9c22-ab643be51fc7/new-removebg-preview__1_-removebg-preview.png" className="news_label" />
                                             <div className="overlay" />
                                         </a>
                                     </NavLink>
@@ -191,7 +191,7 @@ export function Home() {
                 <div className="container">
                     <div className="row">
                         <div className="col-md-6">
-                            <img style={{ width: "250%" }} src="https://o.remove.bg/downloads/b3ae4890-56b3-4221-a572-be541464b6e4/one-removebg-preview.png" className="img-fluid" alt="" />
+                            <img style={{ width: "250%" }} src="https://o.remove.bg/downloads/8e6b9ce1-a1b0-4924-b50d-8894f8312abf/jd2-removebg-preview.png" className="img-fluid" alt="" />
                         </div>
                         <div className="col-md-6">
                             <div className="heading-section heading-section-white">
@@ -316,7 +316,7 @@ export function Home() {
                     </div>
                 </div>
             </section>
-            <footer className="ftco-footer ftco-section">
+            <footer className="ftco-footer ftco-section ">
                 <div className="container">
                     <div className="row">
                         <div className="mouse">

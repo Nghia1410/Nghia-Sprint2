@@ -1,29 +1,27 @@
 package com.example.be.model;
 
-import com.example.be.model.Account;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "cart")
 public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cart_id")
     private Integer cartId;
     @Column(columnDefinition = "DATE")
-    private String dateOrder;
-    @ManyToOne
-    @JoinColumn(name = "id_account",referencedColumnName = "id_account")
-    private Account account;
+    private String date;
+    private boolean payStatus;
+
     @OneToMany(mappedBy = "cart")
     @JsonBackReference
     private Set<CartDetail> cartDetailSet;
 
-    public Cart() {
-    }
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    private User user;
 
     public Integer getCartId() {
         return cartId;
@@ -33,20 +31,20 @@ public class Cart {
         this.cartId = cartId;
     }
 
-    public String getDateOrder() {
-        return dateOrder;
+    public String getDate() {
+        return date;
     }
 
-    public void setDateOrder(String dateOrder) {
-        this.dateOrder = dateOrder;
+    public void setDate(String date) {
+        this.date = date;
     }
 
-    public Account getAccount() {
-        return account;
+    public boolean isPayStatus() {
+        return payStatus;
     }
 
-    public void setAccount(Account account) {
-        this.account = account;
+    public void setPayStatus(boolean payStatus) {
+        this.payStatus = payStatus;
     }
 
     public Set<CartDetail> getCartDetailSet() {
@@ -55,5 +53,13 @@ public class Cart {
 
     public void setCartDetailSet(Set<CartDetail> cartDetailSet) {
         this.cartDetailSet = cartDetailSet;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

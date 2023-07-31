@@ -19,55 +19,7 @@ export function Detail() {
 
     return (
            <>
-            {/* <nav
-                className="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light"
-                id="ftco-navbar"
-            >
-                <div className="container">
-                    <a className="navbar-brand" href="/">
-                        HypeSneaker
-                    </a>
-                    <button
-                        className="navbar-toggler"
-                        type="button"
-                        data-toggle="collapse"
-                        data-target="#ftco-nav"
-                        aria-controls="ftco-nav"
-                        aria-expanded="false"
-                        aria-label="Toggle navigation"
-                    >
-                        <span className="oi oi-menu" /> Menu
-                    </button>
-                    <div className="collapse navbar-collapse" id="ftco-nav">
-                        <ul className="navbar-nav ml-auto">
-                            <li className="nav-item">
-                                <a href="/" className="nav-link">
-                                    Home
-                                </a>
-                            </li>
-
-                            <li className="nav-item">
-                                <a className="nav-link" href="/shop">
-                                    Shop
-                                </a>
-                            </li>
-
-                            <li className="nav-item">
-                                <a href="about.html" className="nav-link">
-                                    About
-                                </a>
-                            </li>
-                            <li className="nav-item cta cta-colored">
-                                <a href="cart.html" className="nav-link">
-                                    <span className="icon-shopping_cart" />
-                                    [0]
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </nav> */}
-            {/* END nav */}
+           
             <div
                 className="hero-wrap hero-bread"
                 style={{
@@ -274,7 +226,7 @@ export function Detail() {
                                     aria-labelledby="day-1-tab"
                                 >
                                     <div className="p-4">
-                                        <h3 className="mb-4">{product.nameProduct}</h3>
+                                        <h3 className="mb-4">{product.productName}</h3>
                                         <p>
                                             On her way she met a copy. The copy warned the Little Blind
                                             Text, that where it came from it would have been rewritten a

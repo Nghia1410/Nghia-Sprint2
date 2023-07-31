@@ -156,7 +156,7 @@ export function Shop() {
                         </h3>
                         <div className="pricing">
                           <p className="price">
-                            <span>{value.price}</span>
+                          <span style={{ fontFamily: "Cabin" }}>đ {new Intl.NumberFormat().format(value.price)}</span>
                           </p>
                         </div>
                         <p className="bottom-area d-flex px-3">
@@ -220,11 +220,11 @@ export function Shop() {
                              
                                 href="#"
                                 className="link flex"
-                                onClick={() => handleDisplayByType(value.idType)}
+                                onClick={() => handleDisplayByType(value.productTypeId)}
                               
                               >
                                 <i className="bx bx-home-alt"></i>
-                                <span>{value.nameType}</span>
+                                <span>{value.productTypeName}</span>
                               </a>
                             </div>
                           </div>

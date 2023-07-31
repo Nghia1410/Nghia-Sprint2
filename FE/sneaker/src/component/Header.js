@@ -93,79 +93,124 @@ export const Header = () => {
     const logout = () => {
         sessionStorage.removeItem("TOKEN");
         sessionStorage.removeItem("USERNAME");
-        sessionStorage.removeItem("ROLES");
+        sessionStorage.removeItem("roles");
         window.location.href = '/';
     };
 
     return (
         <header className={isMenuOpen ? "open" : ""}>
 
-            <nav className="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light"
-                id="ftco-navbar">
-                <ul className={isMenuOpen ? "open" : ""}>
-                    {sessionStorage.getItem("ROLES") === "ROLE_ADMIN" && (
-                        <>
-                            <li>
-                                <Link to="/shop">Sản phẩm</Link>
-                            </li>
+            {sessionStorage.getItem("roles") === "ADMIN" && (
+                <>
+                    <nav
+                        className="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light"
+                        id="ftco-navbar"
+                    >
+                        <div className="container" style={{ marginTop: -13,marginRight: "22%" }}>
+                            <a className="navbar-brand" href="/">
+                                HypeSneaker
+                            </a>
+                            <button
+                                className="navbar-toggler"
+                                type="button"
+                                data-toggle="collapse"
+                                data-target="#ftco-nav"
+                                aria-controls="ftco-nav"
+                                aria-expanded="false"
+                                aria-label="Toggle navigation"
+                            >
+                                <span className="oi oi-menu" /> Menu
+                            </button>
+                            <div className="collapse navbar-collapse" id="ftco-nav" style={{ marginLeft: "38%", marginRight: "-29%"}}>
+                            <ul className="navbar-nav ml-auto">
+                                <li className="nav-item active">
+                                    <a href="/" className="nav-link">
+                                        Home
+                                    </a>
+                                </li>
+                                <li className="nav-item dropdown">
+                                    <a
+                                        className="nav-link "
+                                        href="/shop"
+                                    >
+                                        Shop
+                                    </a>
 
-                            <li>
-                                <Link to="/statistical">Thu nhập</Link>
-                            </li>
-                            <li>
-                                <Link to="/employee">Quản lí nhân viên</Link>
-                            </li>
-                            <li>
-                                <Link to="/profile">{sessionStorage.getItem("USERNAME")}</Link>
-                            </li>
-                            <li>
-                                <Link onClick={() => logout()}>Đăng xuất</Link>
-                            </li>
-                        </>
-                    )}
+                                </li>
+                                <li className="nav-item">
+                                    <a href="about.html" className="nav-link">
+                                        About
+                                    </a>
+                                </li>
 
-                    {sessionStorage.getItem("ROLES") === "ROLE_STAFF" && (
-                        <>
+                                <li className="nav-item cta cta-colored">
+                                    <a href="/cart" className="nav-link">
+                                        <span className="icon-shopping_cart" />
+                                        [0]
+                                    </a>
+                                </li>
 
-                            <div className="d-flex">
-                                <a className="navbar-brand mt-2" href="/" style={{ paddingRight: "150%", marginLeft: 46 }}>
-                                    HypeSneaker
-                                </a>
-                                <button
-                                    className="navbar-toggler"
-                                    type="button"
-                                    data-toggle="collapse"
-                                    data-target="#ftco-nav"
-                                    aria-controls="ftco-nav"
-                                    aria-expanded="false"
-                                    aria-label="Toggle navigation"
-                                >
-                                    <span className="oi oi-menu" /> Menu
-                                </button>
-                                <div className="collapse navbar-collapse" id="ftco-nav">
-                                    <ul className="navbar-nav ml-auto">
-                                        <li className="nav-item">
-                                            <a href="/" className="nav-link">
-                                                Home
-                                            </a>
-                                        </li>
-                                        <li className="nav-item">
-                                            <a href="/shop" className="nav-link">
-                                                Shop
-                                            </a>
-                                        </li>
+                                <li className="nav-item">
+                                    <a className="nav-link">{sessionStorage.getItem("USERNAME")}</a>
+                                </li>
+                                <li className="nav-item">
+                                    <Link className="nav-link" onClick={() => logout()}>Log out</Link>
+                                </li>
 
-                                        <li className="nav-item cta cta-colored">
-                                            <a style={{width:83}}  href="/cart" className="nav-link">
-                                                <span className="icon-shopping_cart" />
-                                                [{cartItems.reduce((total, item) => total + item.quantity, 0)}]
-                                            </a>
-                                        </li>
 
-                                        <li className="nav-item cta cta-colored">
-                                            <a className="nav-link" href="/profile">{sessionStorage.getItem("USERNAME")}</a>
-                                        </li>
-                                        {/* <li className="nav-item cta cta-colored">
+                            </ul>
+                        </div>
+                    </div>
+
+                </nav>
+
+        </>
+    )
+}
+
+{
+    sessionStorage.getItem("roles") === "USER" && (
+        <>
+
+            <div className="d-flex">
+                <a className="navbar-brand mt-2" href="/" style={{ paddingRight: "150%", marginLeft: 46 }}>
+                    HypeSneaker
+                </a>
+                <button
+                    className="navbar-toggler"
+                    type="button"
+                    data-toggle="collapse"
+                    data-target="#ftco-nav"
+                    aria-controls="ftco-nav"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation"
+                >
+                    <span className="oi oi-menu" /> Menu
+                </button>
+                <div className="collapse navbar-collapse" id="ftco-nav">
+                    <ul className="navbar-nav ml-auto">
+                        <li className="nav-item">
+                            <a href="/" className="nav-link">
+                                Home
+                            </a>
+                        </li>
+                        <li className="nav-item">
+                            <a href="/shop" className="nav-link">
+                                Shop
+                            </a>
+                        </li>
+
+                        <li className="nav-item cta cta-colored">
+                            <a style={{ width: 83 }} href="/cart" className="nav-link">
+                                <span className="icon-shopping_cart" />
+                                [{cartItems.reduce((total, item) => total + item.quantity, 0)}]
+                            </a>
+                        </li>
+
+                        <li className="nav-item cta cta-colored">
+                            <a className="nav-link" href="/profile">{sessionStorage.getItem("USERNAME")}</a>
+                        </li>
+                        {/* <li className="nav-item cta cta-colored">
                                             <a className="nav-link" onClick={() => logout()}>Log out</a>
                                         </li>
 
@@ -177,86 +222,89 @@ export const Header = () => {
                                         </li> */}
 
 
-                                        <div class="dropdown mt-2" >
-                                            <button  class="btn  dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <img style={{ width: 25 }} src="https://o.remove.bg/downloads/f09c7b66-9fc9-49c8-9c30-932a1cf27695/avatar-removebg-preview.png"></img>
-                                            </button>
-                                            <ul style={{width:30}} class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                               
-                                                <li style={{textAlign:"center",}}>
-                                                      <a  onClick={() => logout()}>Log out</a>
-                                                    </li>
-                                               
-                                            </ul>
-                                        </div>
+                        <div class="dropdown mt-2" >
+                            <button class="btn  dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                <img style={{ width: 25 }} src="https://o.remove.bg/downloads/e4cd7f4c-438e-4357-93ec-527553f7fbb5/avatar-removebg-preview.png"></img>
+                            </button>
+                            <ul style={{ width: 30 }} class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+
+                                <li style={{ textAlign: "center", }}>
+                                    <a onClick={() => logout()}>Log out</a>
+                                </li>
+
+                            </ul>
+                        </div>
 
 
 
-                                    </ul>
-                                </div>
-                            </div>
-
-                        </>
-                    )}
-                    {!sessionStorage.getItem("TOKEN") && (
-                        <>
-
-                            <div className="d-flex">
-                                <a className="navbar-brand mt-2" href="/" style={{ paddingRight: "190%", marginLeft: 46 }}>
-                                    HypeSneaker
-                                </a>
-                                <button
-                                    className="navbar-toggler"
-                                    type="button"
-                                    data-toggle="collapse"
-                                    data-target="#ftco-nav"
-                                    aria-controls="ftco-nav"
-                                    aria-expanded="false"
-                                    aria-label="Toggle navigation"
-                                >
-                                    <span className="oi oi-menu" /> Menu
-                                </button>
-                                <div className="collapse navbar-collapse" id="ftco-nav">
-                                    <ul className="navbar-nav ml-auto">
-                                        <li className="nav-item">
-                                            <a href="/" className="nav-link">
-                                                Home
-                                            </a>
-                                        </li>
-                                        <li className="nav-item">
-                                            <a href="/shop" className="nav-link">
-                                                Shop
-                                            </a>
-                                        </li>
-
-                                        <li className="nav-item cta cta-colored">
-                                            <a href="/cart" className="nav-link">
-                                                <span className="icon-shopping_cart" />
-                                                [{cartItems.reduce((total, item) => total + item.quantity, 0)}]
-                                            </a>
-                                        </li>
-
-                                        <li style={{ width: 84 }} className="nav-item">
-                                            <a style={{ marginTop: "-4%" }} href="/api/login" className="nav-link">
-                                                <img style={{ width: 25 }} src="https://o.remove.bg/downloads/f09c7b66-9fc9-49c8-9c30-932a1cf27695/avatar-removebg-preview.png"></img>
-                                            </a>
-                                        </li>
-
-
-
-                                    </ul>
-                                </div>
-                            </div>
-                        </>
-                    )}
-                </ul>
-                <div className="menu-toggle" onClick={toggleMenu}>
-                    <div className="bar"></div>
-                    <div className="bar"></div>
-                    <div className="bar"></div>
+                    </ul>
                 </div>
-            </nav>
-        </header>
+            </div>
+
+        </>
+    )
+}
+{
+    !sessionStorage.getItem("TOKEN") && (
+        <>
+
+            <div className="d-flex">
+                <a className="navbar-brand mt-2" href="/" style={{ paddingRight: "190%", marginLeft: 46 }}>
+                    HypeSneaker
+                </a>
+                <button
+                    className="navbar-toggler"
+                    type="button"
+                    data-toggle="collapse"
+                    data-target="#ftco-nav"
+                    aria-controls="ftco-nav"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation"
+                >
+                    <span className="oi oi-menu" /> Menu
+                </button>
+                <div className="collapse navbar-collapse" id="ftco-nav">
+                    <ul className="navbar-nav ml-auto">
+                        <li className="nav-item">
+                            <a href="/" className="nav-link">
+                                Home
+                            </a>
+                        </li>
+                        <li className="nav-item">
+                            <a href="/shop" className="nav-link">
+                                Shop
+                            </a>
+                        </li>
+
+                        <li className="nav-item cta cta-colored">
+                            <a href="/cart" className="nav-link">
+                                <span className="icon-shopping_cart" />
+                                [{cartItems.reduce((total, item) => total + item.quantity, 0)}]
+                            </a>
+                        </li>
+
+                        <li style={{ width: 84 }} className="nav-item">
+                            <a style={{ marginTop: "-4%" }} href="/api/login" className="nav-link">
+                                <img style={{ width: 25 }} src="https://o.remove.bg/downloads/e4cd7f4c-438e-4357-93ec-527553f7fbb5/avatar-removebg-preview.png"></img>
+                            </a>
+                        </li>
+
+
+
+                    </ul>
+                </div>
+            </div>
+        </>
+    )
+}
+
+<div className="menu-toggle" onClick={toggleMenu}>
+    <div className="bar"></div>
+    <div className="bar"></div>
+    <div className="bar"></div>
+</div>
+
+        </header >
     );
 };
 

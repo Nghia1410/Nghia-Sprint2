@@ -1,58 +1,53 @@
 package com.example.be.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
-@Table(name = "product")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_product")
-    private Integer idProduct;
-
-    @Column(name = "name_product",columnDefinition = "MEDIUMTEXT")
-    private String nameProduct;
-
-
-    @Column(name = "price", columnDefinition = "DOUBLE")
+    @Column(name = "product_id")
+    private Integer productId;
+    private String productName;
     private Double price;
-
-    @Column(name = "image", columnDefinition = "MEDIUMTEXT")
+    @Column(columnDefinition = "text")
+    private String description;
     private String image;
+    private Integer amount;
 
     @ManyToOne
-    @JoinColumn(name = "id_type", referencedColumnName = "id_type")
+    @JoinColumn(name = "product_type_id", referencedColumnName = "product_type_id")
     private ProductType productType;
 
     @ManyToOne
-    @JoinColumn(name = "id_brand", referencedColumnName = "id_brand")
+    @JoinColumn(name = "brand_id", referencedColumnName = "brand_id")
     private Brand brand;
+
+    @OneToMany(mappedBy = "product")
+    @JsonIgnore
+    private Set<CartDetail> cartDetailSet;
+
 
     public Product() {
     }
 
-    public Product(Integer idProduct, String nameProduct, Double price, String image, ProductType productType) {
-        this.idProduct = idProduct;
-        this.nameProduct = nameProduct;
-        this.price = price;
-        this.image = image;
-        this.productType = productType;
+    public Integer getProductId() {
+        return productId;
     }
 
-    public Integer getIdProduct() {
-        return idProduct;
+    public void setProductId(Integer productId) {
+        this.productId = productId;
     }
 
-    public void setIdProduct(Integer idProduct) {
-        this.idProduct = idProduct;
+    public String getProductName() {
+        return productName;
     }
 
-    public String getNameProduct() {
-        return nameProduct;
-    }
-
-    public void setNameProduct(String nameProduct) {
-        this.nameProduct = nameProduct;
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 
     public Double getPrice() {
@@ -63,6 +58,14 @@ public class Product {
         this.price = price;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public String getImage() {
         return image;
     }
@@ -71,11 +74,36 @@ public class Product {
         this.image = image;
     }
 
+    public Integer getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Integer amount) {
+        this.amount = amount;
+    }
+    
+
     public ProductType getProductType() {
         return productType;
     }
 
     public void setProductType(ProductType productType) {
         this.productType = productType;
+    }
+
+    public Brand getBrand() {
+        return brand;
+    }
+
+    public void setBrand(Brand brand) {
+        this.brand = brand;
+    }
+
+    public Set<CartDetail> getCartDetailSet() {
+        return cartDetailSet;
+    }
+
+    public void setCartDetailSet(Set<CartDetail> cartDetailSet) {
+        this.cartDetailSet = cartDetailSet;
     }
 }

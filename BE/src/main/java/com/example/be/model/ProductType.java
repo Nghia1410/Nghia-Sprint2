@@ -1,40 +1,46 @@
 package com.example.be.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
-@Table(name = "product_type")
 public class ProductType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "product_type_id")
+    private Integer productTypeId;
+    private String productTypeName;
 
-    @Column(name = "id_type")
-    private Integer idType;
-
-    @Column(name = "name_type",columnDefinition = "Varchar(40)")
-    private String nameType;
+    @OneToMany(mappedBy = "brand")
+    @JsonBackReference
+    private Set<Product> productSet;
 
     public ProductType() {
     }
 
-    public ProductType(Integer idType, String nameType) {
-        this.idType = idType;
-        this.nameType = nameType;
+    public Integer getProductTypeId() {
+        return productTypeId;
     }
 
-    public Integer getIdType() {
-        return idType;
+    public void setProductTypeId(Integer productTypeId) {
+        this.productTypeId = productTypeId;
     }
 
-    public void setIdType(Integer idType) {
-        this.idType = idType;
+    public String getProductTypeName() {
+        return productTypeName;
     }
 
-    public String getNameType() {
-        return nameType;
+    public void setProductTypeName(String productTypeName) {
+        this.productTypeName = productTypeName;
     }
 
-    public void setNameType(String nameType) {
-        this.nameType = nameType;
+    public Set<Product> getProductSet() {
+        return productSet;
+    }
+
+    public void setProductSet(Set<Product> productSet) {
+        this.productSet = productSet;
     }
 }
