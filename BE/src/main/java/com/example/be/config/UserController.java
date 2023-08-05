@@ -10,19 +10,22 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @CrossOrigin("*")
 public class UserController {
     @Autowired
     private IUserService iUserService;
 
-    @GetMapping("api/user/{email}")
-    public ResponseEntity<User> findUserByEmail(@PathVariable String email) {
-        User user = iUserService.findUserByEmail(email);
+    @GetMapping("api/user/{username}")
+    public ResponseEntity<User> findUserByUsername(@PathVariable String username) {
+        User user = iUserService.findUserByUsername(username);
         if (user == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
             return new ResponseEntity<>(user, HttpStatus.OK);
         }
     }
+
 }

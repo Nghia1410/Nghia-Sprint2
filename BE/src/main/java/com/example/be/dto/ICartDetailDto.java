@@ -9,7 +9,7 @@ public interface ICartDetailDto {
 
     Double getPrice();
 
-    String getImg();
+    String getImage();
 
     Integer getAmount();
 

@@ -1,54 +1,97 @@
 import * as productService from "../service/productService"
 import React, { useEffect, useState } from "react"
 import * as Cart from "../component/Cart"
+import Swal from "sweetalert2"
+import { Link } from "react-router-dom";
+import { QuantityContext } from "./QuantityContext";
+import { useContext } from "react";
+import * as CartService from "..//service/cartService"
+import axios from "axios";
+import { param } from "jquery";
+import * as UserService from "..//service/userService"
+
+
+
+
 
 export function Shop() {
-
+  const [items, setItems] = useState([]);
+  const [cart, setCart] = useState([]);
   const [cartItems, setCartItems] = useState([]);
   const [productType, setProductType] = useState([])
   const [product, setProduct] = useState([]);
   const [itemsToShow, setItemsToShow] = useState(9); // Số sản phẩm hiển thị ban đầu
   const [itemsPerLoad, setItemsPerLoad] = useState(3);
-
+  const {iconQuantity,setIconQuantity } = useContext(QuantityContext)
+  
   const displayListProduct = async () => {
     const res = await productService.findAllProduct();
     setProduct(res);
   };
 
-  const addToCart = (product) => {
-    // Check if the product already exists in the cart
-    const existingItem = cartItems.find((item) => item.id === product.id);
-
-    if (existingItem) {
-      // If the product already exists, update its quantity
-      const updatedItems = cartItems.map((item) =>
-        item.id === product.id
-          ? { ...item, quantity: item.quantity + 1 }
-          : item
-      );
-      setCartItems(updatedItems);
-    } else {
-      // If the product doesn't exist, add it to the cart
-      setCartItems([...cartItems, { ...product, quantity: 1 }]);
-    }
-  };
-
-  const handleAddToCart = (product) => {
-    // Check if the product already exists in the cart
-    const existingProduct = cartItems.find(item => item.id === product.id);
-    if (existingProduct) {
-      // If the product exists, update its quantity
-      const updatedCart = cartItems.map(item =>
-        item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
-      );
-      setCartItems(updatedCart);
-    } else {
-      // If the product doesn't exist, add it to the cart with quantity 1
-      setCartItems([...cartItems, { ...product, quantity: 1 }]);
-    }
-  };
 
 
+  const [userId, setUserId] = useState(0);
+  const username = sessionStorage.getItem('USERNAME');
+    const [productId, setProductId] = useState(1); 
+    const [amount, setAmount] = useState(1); 
+   
+
+    useEffect(() => {
+      const getUserName = async () => {
+          const rs = await UserService.findUserName(username);
+          console.log(rs);
+          setUserId(rs)
+      }
+      getUserName();
+  }, []);
+
+
+    const addToCart = (productId,item) => {
+      const apiUrl = `http://localhost:8080/api/cart/addToCart/${userId}/${productId}/${amount}`;
+
+      // const existingCartItem = cartItems.find(
+      //   (cartItem) => cartItem.productId === item.productId
+      // );
+  
+      // if (existingCartItem) {
+      //   const updatedCartItems = cartItems.map((cartItem) =>
+      //     cartItem.productId === item.productId
+      //       ? { ...cartItem, quantityOfProduct: cartItem.quantityOfProduct + 1 }
+      //       : cartItem
+      //   );
+        
+      //   setCartItems(updatedCartItems);
+      // } else {
+      //   setCartItems([...cartItems, { ...item, quantityOfProduct: 1 }]);
+        
+      // }
+      setIconQuantity(iconQuantity+1)
+      Swal.fire({
+        icon: 'success',
+        title: 'Đã thêm vào giỏ hàng',
+        showConfirmButton: false,
+        timer: 1000
+      });
+  
+ 
+      axios.get(apiUrl)
+        .then(response => {
+          Swal.fire({
+            title: 'Thông báo',
+            text: 'Thêm thành công sản phẩm vào giỏ hàng!',
+            icon: 'success',
+            confirmButtonText: 'OK'
+        })
+          console.log('Item added to cart:', response.data);
+        })
+        .catch(error => {
+          console.error('Error adding item to cart:', error.response);
+        });
+    };
+
+
+  console.log(iconQuantity);
   const handleDisplayByType = async (type) => {
     const res = await productService.getAllProductByType(type);
     setProduct(res);
@@ -72,15 +115,17 @@ export function Shop() {
   const handleLoadMore = () => {
     setItemsToShow(prevItems => prevItems + itemsPerLoad);
   };
+  const handleAddToCartClick = (productId) => {
+    addToCart(productId);
+  };
   return (
     <>
-
       <div
         className="hero-wrap hero-bread"
         style={{
           backgroundImage: 'url("https://hsvheartmds.com/wp-content/uploads/2016/12/stock-photo-medical-blurred-background-395854618.jpg")',
-          position: 'relative', // Thêm thuộc tính position để chứa phần tử chữ SHOP
-          color: 'white', // Đặt màu chữ SHOP là trắng
+          position: 'relative', 
+          color: 'white',
         }}
       >
         <div className="container">
@@ -89,12 +134,12 @@ export function Shop() {
               <h1
                 style={{
                   paddingLeft: "28px",
-                  position: 'absolute', // Đặt vị trí của phần tử chữ SHOP là absolute
-                  top: '50%', // Đặt phần tử chữ SHOP ở giữa theo chiều dọc
-                  left: '50%', // Đặt phần tử chữ SHOP ở giữa theo chiều ngang
-                  transform: 'translate(-50%, -50%)', // Để căn giữa chữ SHOP
-                  fontSize: '4rem', // Đặt kích thước chữ SHOP
-                  fontWeight: 'bold', // Đặt độ đậm cho chữ SHOP
+                  position: 'absolute', 
+                  top: '50%', 
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  fontSize: '4rem',
+                  fontWeight: 'bold', 
                   fontFamily: "fantasy"
                 }}
               >
@@ -104,17 +149,11 @@ export function Shop() {
           </div>
         </div>
       </div>
-
-
-
       <section className=" bg-light mt-5">
         <div className="container">
           <div className="row">
             <div className="col-md-8 col-lg-10 order-md-last">
               <div className="row">
-
-
-
                 {product?.slice(0, itemsToShow)?.map((value, index) => (
                   <div className="col-sm-12 col-md-12 col-lg-4 d-flex" key={index}>
                     <div className="product d-flex flex-column">
@@ -156,11 +195,11 @@ export function Shop() {
                         </h3>
                         <div className="pricing">
                           <p className="price">
-                          <span style={{ fontFamily: "Cabin" }}>đ {new Intl.NumberFormat().format(value.price)}</span>
+                            <span style={{ fontFamily: "Cabin" }}>đ {new Intl.NumberFormat().format(value.price)}</span>
                           </p>
                         </div>
                         <p className="bottom-area d-flex px-3">
-                          <a href="#" className="add-to-cart text-center py-2 mr-1" onClick={() => handleAddToCart(value)}>
+                          <a href="#" className="add-to-cart text-center py-2 mr-1" onClick={() => handleAddToCartClick(value.productId)}>
                             <span>
                               Add to cart <i className="ion-ios-add ml-1" />
                             </span>
@@ -202,7 +241,7 @@ export function Shop() {
                       onClick={() => displayListProduct()}
                     >
                       <i className="bx bx-grid-alt"></i>
-                      <span>Tất cả</span>
+                      <span>All</span>
                     </a>
                   </div>
                   {productType.map((value, index) => {
@@ -217,11 +256,11 @@ export function Shop() {
                           <div className="panel panel-default">
                             <div >
                               <a
-                             
+
                                 href="#"
                                 className="link flex"
                                 onClick={() => handleDisplayByType(value.productTypeId)}
-                              
+
                               >
                                 <i className="bx bx-home-alt"></i>
                                 <span>{value.productTypeName}</span>
@@ -285,7 +324,6 @@ export function Shop() {
           </div>
         </div>
       </section>
-      {/* <Cart cartItems={cartItems} /> */}
       <section className="ftco-gallery">
         <div className="container">
           <div className="row justify-content-center">
@@ -507,13 +545,11 @@ export function Shop() {
           <div className="row">
             <div className="col-md-12 text-center">
               <p>
-                {/* Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. */}
                 Copyright © All rights reserved | This template is made with{" "}
                 <i className="icon-heart color-danger" aria-hidden="true" /> by{" "}
                 <a href="https://colorlib.com" target="_blank">
                   Colorlib
                 </a>
-                {/* Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. */}
               </p>
             </div>
           </div>

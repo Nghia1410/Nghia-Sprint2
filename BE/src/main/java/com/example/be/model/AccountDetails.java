@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 public class AccountDetails implements UserDetails {
     private static final long serialVersionUID = 1L;
+
     private String username;
 
     @JsonIgnore
@@ -20,8 +21,22 @@ public class AccountDetails implements UserDetails {
 
     public AccountDetails(String username, String password,
                           List<GrantedAuthority> authorities) {
+
         this.username = username;
         this.password = password;
+        this.authorities = authorities;
+    }
+
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setAuthorities(List<GrantedAuthority> authorities) {
         this.authorities = authorities;
     }
 
@@ -70,6 +85,7 @@ public class AccountDetails implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 
     @Override
     public boolean equals(Object o) {

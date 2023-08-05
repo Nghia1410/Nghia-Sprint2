@@ -14,12 +14,13 @@ import java.util.List;
 public interface ICartDetailRepository extends JpaRepository<CartDetail, Integer> {
     @Query(value = "select c.cart_id as cartId, cd.cart_detail_id as cartDetailId, \n" +
             "p.product_name as productName, p.product_id as productId,\n" +
-            "p.price as price, p.img as img, cd.amount as amount, p.amount as amountt, c.user_id as userId \n" +
+            "p.price as price, p.image as image, cd.amount as amount, p.amount as amountt, u.username as username \n" +
             "    from product as p \n" +
             "    join cart_detail as cd on cd.product_id = p.product_id \n" +
             "    join cart as c on cd.cart_id = c.cart_id \n" +
-            "    where c.user_id = :userId and cd.delete_status = false order by cd.cart_detail_id desc ", nativeQuery = true)
-    List<ICartDetailDto> findAll(@Param("userId") Integer userId);
+            "    join user as u on u.user_id = c.user_id "+
+            "    where u.username = :username and cd.delete_status = false order by cd.cart_detail_id desc ", nativeQuery = true)
+    List<ICartDetailDto> findAll(@Param("username") String username);
 
 
     @Query(value = "select cd.cart_detail_id as cartDetailId from cart_detail cd " +

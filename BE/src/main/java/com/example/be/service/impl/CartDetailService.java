@@ -21,8 +21,8 @@ public class CartDetailService implements ICartDetailService {
     }
 
     @Override
-    public List<ICartDetailDto> findAll(Integer userId) {
-        return iCartDetailRepository.findAll(userId);
+    public List<ICartDetailDto> findAll(String username) {
+        return iCartDetailRepository.findAll(username);
     }
 
     @Override

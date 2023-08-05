@@ -93,6 +93,9 @@ export function Detail() {
                                     </a>
                                 </p>
                             </div>
+                            <h4>
+                               <b>{product.productName}</b> 
+                            </h4>
                             <p className="price">
                                 <span>đ {new Intl.NumberFormat().format(product.price)}</span>
                             </p>

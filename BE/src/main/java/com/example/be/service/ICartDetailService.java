@@ -8,7 +8,7 @@ import java.util.List;
 public interface ICartDetailService {
     CartDetail save(CartDetail cartDetail);
 
-    List<ICartDetailDto> findAll(Integer userId);
+    List<ICartDetailDto> findAll(String username);
 
     List<Integer> findAllCartDetail(Integer userId);
 

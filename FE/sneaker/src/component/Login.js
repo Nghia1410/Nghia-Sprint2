@@ -1,11 +1,11 @@
 import "../css/login.css";
-import {Formik, Form, Field, ErrorMessage} from "formik";
-import {getEmail, postLogin} from "../service/Service";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import { getEmail, postLogin } from "../service/Service";
 import * as Yup from "yup";
-import {useNavigate} from "react-router-dom";
-import React, {useState} from "react";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faEye, faEyeSlash} from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import Swal from "sweetalert2";
 
 import 'react-toastify/dist/ReactToastify.css';
@@ -36,71 +36,68 @@ export function Login() {
     }
 
     return (
-        <div  id="loginPage">
+        <div id="loginPage">
             <div className="">
-                <div className=" ">
-                </div>
-                <div className="">
-                    <h1 className="text-center mb-5">LOGIN</h1>
-                    <Formik
-                        initialValues={{
-                            username: "",
-                            password: ""
-                        }}
-
-                        validationSchema={Yup.object().shape({
-                            username: Yup.string().required("Please fill this field"),
-
-                            password: Yup.string()
-                                .required("Please fill this field")
-                                // .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,10}$/, "mật khẩu phải có ít nhất 1 chữ hoa,ít nhất 1 chữ thường, có 1 ký tự và số"),
-                        })}
-
-                        onSubmit={(values) => {
-                            debugger
-                            postLogin(values)
-                                .then((e) => {
-                                    console.log(e);
-                                    sessionStorage.setItem('TOKEN', e.accessToken);
-                                    sessionStorage.setItem('USERNAME', e.username);
-                                    sessionStorage.setItem('roles', e.roles[0])
-                                    window.location.href = '/';
-                                })
-                                .catch(() => {
-                                        setFailedAccount("Username or password is not correct")
-                                    }
-                                );
-                        }}
-                    >
-                        <Form>
-                            <div className="mb-3 input-group">
-                                <Field type="text" className="form-control" placeholder="Username"
-                                       name="username"/>
-                                <ErrorMessage name="username" className="text-danger col-12" component="span"/>
-
-                            </div>
-                            <div className="mb-3 my-5 input-group">
-                                <Field type="password" className="form-control "
-                                       placeholder="Password" name="password"/>
-                                <span className="password-icon" onClick={() => handlePassword()}>
-                                        <FontAwesomeIcon icon={showPassword ? faEye : faEyeSlash}/>
-                                    </span>
-
-                                <ErrorMessage name="password" className="text-danger col-12" component="span"/>
-                                {failedAccount && (
-                                    <span className="text-danger col-12">{failedAccount}</span>
-                                )}
-                            </div>
-                            <div className="mb-3 float-end">
-                                <a className="text-forgot-password text-decoration-none" data-bs-toggle="modal"
-                                   data-bs-target="#exampleModal">Forgot password?</a>
-                            </div>
-                            <button type="submit" className="col-12 button">SIGN IN</button>
-                        </Form>
-                    </Formik>
-
-                </div>
             </div>
+            <div className="">
+                <h1 className="text-center mb-5">LOGIN</h1>
+                <Formik
+                    initialValues={{
+                        username: "",
+                        password: ""
+                    }}
+
+                    validationSchema={Yup.object().shape({
+                        username: Yup.string().required("Please fill this field"),
+
+                        password: Yup.string()
+                            .required("Please fill this field")
+                        // .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,10}$/, "mật khẩu phải có ít nhất 1 chữ hoa,ít nhất 1 chữ thường, có 1 ký tự và số"),
+                    })}
+
+                    onSubmit={(values) => {
+                        debugger
+                        postLogin(values)
+                            .then((e) => {
+                                console.log(e);
+                                sessionStorage.setItem('TOKEN', e.accessToken);
+                                sessionStorage.setItem('USERNAME', e.username);
+                                sessionStorage.setItem('USERID', e.userId);
+                                sessionStorage.setItem('roles', e.roles[0])
+
+                                window.location.href = '/';
+                            })
+                            .catch(() => {
+                                setFailedAccount("Username or password is not correct")
+                            }
+                            );
+                    }}
+                >
+                    <Form style={{ width: "35%", marginLeft: 494 }}>
+                        <div className="mb-3 input-group">
+                            <Field type="text" className="form-control" placeholder="Username"
+                                name="username" />
+                            <ErrorMessage name="username" className="text-danger col-12" component="span" />
+                        </div>
+                        <div className="mb-3 my-5 input-group">
+                            <Field type="password" className="form-control "
+                                placeholder="Password" name="password" />
+                            <ErrorMessage name="password" className="text-danger col-12" component="span" />
+                            {failedAccount && (
+                                <span className="text-danger col-12">{failedAccount}</span>
+                            )}
+                        </div>
+                      
+                        <button style={{ marginTop: -10 }} type="submit" className="col-12 button">SIGN IN</button>
+
+                        <div className="mb-3 " style={{ textAlign: "center", color:"#3c3c3c" }}>
+                            <a href="">Forgot password?</a>
+                        </div>
+                    </Form>
+                </Formik>
+
+            </div>
+
             <footer className="ftco-footer ftco-section">
                 <div className="container">
                     <div className="row">
@@ -251,6 +248,6 @@ export function Login() {
                     </div>
                 </div>
             </footer>
-        </div>
+        </div >
     )
 }

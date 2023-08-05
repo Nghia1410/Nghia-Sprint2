@@ -19,7 +19,7 @@ public class UserDetailService implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) {
-        User user = iUserRepository.findUserByEmail(username);
+        User user = iUserRepository.findUserByUsername(username);
         if (user == null) {
             throw new UsernameNotFoundException("User " + username + " was not found in the database");
         }

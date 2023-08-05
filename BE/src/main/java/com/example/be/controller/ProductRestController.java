@@ -81,12 +81,13 @@ public class ProductRestController {
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
-    @GetMapping("/api/cart/addToCart/{userId}/{productId}/{amount}")
+    @GetMapping("/cart/addToCart/{userId}/{productId}/{amount}")
     public ResponseEntity<?> addToCart(@PathVariable Integer userId,
                                        @PathVariable Integer productId,
-                                       @PathVariable Integer amount) {
+                                       @PathVariable Integer amount,
+                                       String username) {
 
-        List<ICartDetailDto> cartDetailDtoList = iCartDetailService.findAll(userId);
+        List<ICartDetailDto> cartDetailDtoList = iCartDetailService.findAll(username);
         for (ICartDetailDto cartDetailDto : cartDetailDtoList) {
             if (Objects.equals(cartDetailDto.getProductId(), productId)) {
                 CartDetail cartDetail = iCartDetailService.findByCartDetailId(cartDetailDto.getCartDetailId());
@@ -118,9 +119,9 @@ public class ProductRestController {
         return new ResponseEntity<>(cartDetail1, HttpStatus.CREATED);
     }
 
-    @GetMapping("/api/cart/{userId}")
-    public ResponseEntity<?> findAllCartDetail(@PathVariable Integer userId) {
-        List<ICartDetailDto> cartDetailDtoList = iCartDetailService.findAll(userId);
+    @GetMapping("/cart/{username}")
+    public ResponseEntity<?> findAllCartDetail(@PathVariable String username) {
+        List<ICartDetailDto> cartDetailDtoList = iCartDetailService.findAll(username);
 
         if (cartDetailDtoList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -129,37 +130,37 @@ public class ProductRestController {
         }
     }
 
-    @GetMapping("/api/cart/updateAmount/{amount}/{cartDetailId}")
+    @GetMapping("/cart/updateAmount/{amount}/{cartDetailId}")
     public ResponseEntity<?> updateAmount(@PathVariable Integer amount, @PathVariable Integer cartDetailId) {
         iCartDetailService.updateAmount(amount, cartDetailId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/api/cart/setCart/{userId}")
+    @GetMapping("/cart/setCart/{userId}")
     public ResponseEntity<?> setCart(@PathVariable Integer userId) {
         iCartDetailService.setCart(userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/api/cart/deleteCartDetail/{cartId}/{productId}")
+    @DeleteMapping("/cart/deleteCartDetail/{cartId}/{productId}")
     public ResponseEntity<?> deleteCartDetail(@PathVariable Integer cartId, @PathVariable Integer productId) {
         iCartDetailService.deleteCartDetail(cartId, productId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/api/cart/setAmount/{amount}/{productId}")
+    @GetMapping("/cart/setAmount/{amount}/{productId}")
     public ResponseEntity<Product> setAmount(@PathVariable Integer amount, @PathVariable Integer productId) {
         iProductService.setAmount(amount, productId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/api/cart/history/{userId}")
+    @GetMapping("/cart/history/{userId}")
     public ResponseEntity<List<PurchaseHistory>> getAllPurchase(@PathVariable Integer userId) {
         List<PurchaseHistory> purchaseHistoryList = iPurchaseService.findAllByUserId(userId);
         return new ResponseEntity<>(purchaseHistoryList, HttpStatus.OK);
     }
 
-    @GetMapping("/api/cart/save/{userId}/{total}")
+    @GetMapping("/cart/save/{userId}/{total}")
     public ResponseEntity<?> saveHistory(@PathVariable Integer userId,
                                          @PathVariable Integer total) {
         List<Integer> cart = iCartDetailService.findAllCartDetail(userId);

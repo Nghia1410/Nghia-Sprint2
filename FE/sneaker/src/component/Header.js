@@ -1,46 +1,41 @@
 import React, { useEffect, useState } from "react";
 import "../css/header.css";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
+import Swal from "sweetalert2"
+import { useContext } from "react";
+import { QuantityContext } from "./QuantityContext";
+import * as CartService from "..//service/cartService"
+import * as UserService from "..//service/userService"
+
 
 export const Header = () => {
-    const [cartItems, setCartItems] = useState([]);
+    const [userId, setUserId] = useState(0);
+    const username = sessionStorage.getItem('USERNAME');
+    const [user, setUser] = useState([0]);
+    const [cart, setCart] = useState([]);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isMediaQueryMatched, setIsMediaQueryMatched] = useState(false);
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+    const { iconQuantity, setIconQuantity } = useContext(QuantityContext)
 
-    const handleAddToCart = (product) => {
-        // Check if the product already exists in the cart
-        const existingProduct = cartItems.find(item => item.id === product.id);
-        if (existingProduct) {
-            // If the product exists, update its quantity
-            const updatedCart = cartItems.map(item =>
-                item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
-            );
-            setCartItems(updatedCart);
-        } else {
-            // If the product doesn't exist, add it to the cart with quantity 1
-            setCartItems([...cartItems, { ...product, quantity: 1 }]);
+
+
+    useEffect(() => {
+        const getUserName = async () => {
+            const rs = await UserService.findUserName(username);
+            console.log(rs);
+            setUserId(rs)
         }
-    };
+        getUserName();
+    }, []);
 
-    const addToCart = (product) => {
-        // Check if the product already exists in the cart
-        const existingItem = cartItems.find((item) => item.id === product.id);
-
-        if (existingItem) {
-            // If the product already exists, update its quantity
-            const updatedItems = cartItems.map((item) =>
-                item.id === product.id
-                    ? { ...item, quantity: item.quantity + 1 }
-                    : item
-            );
-            setCartItems(updatedItems);
-        } else {
-            // If the product doesn't exist, add it to the cart
-            setCartItems([...cartItems, { ...product, quantity: 1 }]);
+    useEffect(() => {
+        const showListCart = async () => {
+            const rs = await CartService.getAllCart();
+            setCart(rs)
         }
-    };
-
+        showListCart()
+    }, []);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -104,9 +99,9 @@ export const Header = () => {
                 <>
                     <nav
                         className="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light"
-                        id="ftco-navbar"
+                        id="ftco-navbar" style={{ height: "10%" }}
                     >
-                        <div className="container" style={{ marginTop: -13,marginRight: "22%" }}>
+                        <div className="container" style={{ marginTop: -13, marginRight: "22%" }}>
                             <a className="navbar-brand" href="/">
                                 HypeSneaker
                             </a>
@@ -121,179 +116,192 @@ export const Header = () => {
                             >
                                 <span className="oi oi-menu" /> Menu
                             </button>
-                            <div className="collapse navbar-collapse" id="ftco-nav" style={{ marginLeft: "38%", marginRight: "-29%"}}>
-                            <ul className="navbar-nav ml-auto">
-                                <li className="nav-item active">
-                                    <a href="/" className="nav-link">
-                                        Home
-                                    </a>
-                                </li>
-                                <li className="nav-item dropdown">
-                                    <a
-                                        className="nav-link "
-                                        href="/shop"
-                                    >
-                                        Shop
-                                    </a>
+                            <div className="collapse navbar-collapse" id="ftco-nav" style={{ marginLeft: "38%", marginRight: "-29%" }}>
+                                <ul className="navbar-nav ml-auto">
+                                    <li className="nav-item active">
+                                        <a href="/" className="nav-link">
+                                            Home
+                                        </a>
+                                    </li>
+                                    <li className="nav-item dropdown">
+                                        <a
+                                            className="nav-link "
+                                            href="/shop"
+                                        >
+                                            Shop
+                                        </a>
 
-                                </li>
-                                <li className="nav-item">
-                                    <a href="about.html" className="nav-link">
-                                        About
-                                    </a>
-                                </li>
+                                    </li>
+                                    <li className="nav-item">
+                                        <a href="about.html" className="nav-link">
+                                            Employee
+                                        </a>
 
-                                <li className="nav-item cta cta-colored">
-                                    <a href="/cart" className="nav-link">
-                                        <span className="icon-shopping_cart" />
-                                        [0]
-                                    </a>
-                                </li>
+                                    </li>
 
-                                <li className="nav-item">
-                                    <a className="nav-link">{sessionStorage.getItem("USERNAME")}</a>
-                                </li>
-                                <li className="nav-item">
-                                    <Link className="nav-link" onClick={() => logout()}>Log out</Link>
-                                </li>
+                                    <NavLink to={`/cart/${username}`}>
+                                        <li className="nav-item cta cta-colored">
+
+                                            <a className="nav-link" style={{marginTop: 10}}>
+                                                <span className="icon-shopping_cart" />
+                                                [{iconQuantity}]
+                                            </a>
 
 
-                            </ul>
+                                        </li>
+                                    </NavLink>
+
+
+
+
+
+                                    <li className="nav-item">
+                                        <a className="nav-link" style={{ color: "red" }}>{sessionStorage.getItem("USERNAME")}</a>
+                                    </li>
+                                    <li className="nav-item">
+                                        <Link className="nav-link" style={{ color: "red" }} onClick={() => logout()}>Log out</Link>
+                                    </li>
+
+
+                                </ul>
+                            </div>
                         </div>
-                    </div>
 
-                </nav>
+                    </nav>
 
-        </>
-    )
-}
+                </>
+            )
+            }
 
-{
-    sessionStorage.getItem("roles") === "USER" && (
-        <>
+            {
+                sessionStorage.getItem("roles") === "USER" && (
+                    <>
 
-            <div className="d-flex">
-                <a className="navbar-brand mt-2" href="/" style={{ paddingRight: "150%", marginLeft: 46 }}>
-                    HypeSneaker
-                </a>
-                <button
-                    className="navbar-toggler"
-                    type="button"
-                    data-toggle="collapse"
-                    data-target="#ftco-nav"
-                    aria-controls="ftco-nav"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation"
-                >
-                    <span className="oi oi-menu" /> Menu
-                </button>
-                <div className="collapse navbar-collapse" id="ftco-nav">
-                    <ul className="navbar-nav ml-auto">
-                        <li className="nav-item">
-                            <a href="/" className="nav-link">
-                                Home
-                            </a>
-                        </li>
-                        <li className="nav-item">
-                            <a href="/shop" className="nav-link">
-                                Shop
-                            </a>
-                        </li>
+                        <nav
+                            className="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light"
+                            id="ftco-navbar" style={{ height: "10%" }}
+                        >
+                            <div className="container" style={{ marginTop: -13, marginRight: "22%" }}>
+                                <a className="navbar-brand" href="/">
+                                    HypeSneaker
+                                </a>
+                                <button
+                                    className="navbar-toggler"
+                                    type="button"
+                                    data-toggle="collapse"
+                                    data-target="#ftco-nav"
+                                    aria-controls="ftco-nav"
+                                    aria-expanded="false"
+                                    aria-label="Toggle navigation"
+                                >
+                                    <span className="oi oi-menu" /> Menu
+                                </button>
+                                <div className="collapse navbar-collapse" id="ftco-nav" style={{ marginLeft: "38%", marginRight: "-29%" }}>
+                                    <ul className="navbar-nav ml-auto">
+                                        <li className="nav-item active">
+                                            <a href="/" className="nav-link">
+                                                Home
+                                            </a>
+                                        </li>
+                                        <li className="nav-item dropdown">
+                                            <a
+                                                className="nav-link "
+                                                href="/shop"
+                                            >
+                                                Shop
+                                            </a>
 
-                        <li className="nav-item cta cta-colored">
-                            <a style={{ width: 83 }} href="/cart" className="nav-link">
-                                <span className="icon-shopping_cart" />
-                                [{cartItems.reduce((total, item) => total + item.quantity, 0)}]
-                            </a>
-                        </li>
+                                        </li>
+                                        <li className="nav-item">
+                                            <a href="about.html" className="nav-link">
+                                                About
+                                            </a>
+                                        </li>
 
-                        <li className="nav-item cta cta-colored">
-                            <a className="nav-link" href="/profile">{sessionStorage.getItem("USERNAME")}</a>
-                        </li>
-                        {/* <li className="nav-item cta cta-colored">
-                                            <a className="nav-link" onClick={() => logout()}>Log out</a>
+                                        <NavLink to={`/cart/${username}`}>
+                                            <li className="nav-item cta cta-colored">
+
+                                                <a className="nav-link">
+                                                    <span className="icon-shopping_cart" />
+                                                    [{iconQuantity}]
+                                                </a>
+
+
+                                            </li>
+                                        </NavLink>
+
+                                        <li className="nav-item">
+                                            <a className="nav-link" style={{ color: "red" }}>{sessionStorage.getItem("USERNAME")}</a>
+                                        </li>
+                                        <li className="nav-item">
+                                            <Link className="nav-link" style={{ color: "red" }} onClick={() => logout()}>Log out</Link>
                                         </li>
 
 
-                                        <li style={{ width: 84 }} className="nav-item">
-                                            <a style={{ marginTop: "-4%" }} href="/api/login" className="nav-link">
-                                                <img style={{ width: 25 }} src="https://o.remove.bg/downloads/e36cb263-1866-406b-b1e1-63b01451dca6/avatar-removebg-preview.png"></img>
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </nav>
+
+                    </>
+                )
+            }
+            {
+                !sessionStorage.getItem("TOKEN") && (
+                    <>
+                    <nav
+                            className="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light"
+                            id="ftco-navbar" style={{ height: "10%" }}
+                        >
+                            <div className="container" style={{ marginTop: -13, marginRight: "22%" }}>
+                                <a className="navbar-brand" href="/">
+                                    HypeSneaker
+                                </a>
+                                <button
+                                    className="navbar-toggler"
+                                    type="button"
+                                    data-toggle="collapse"
+                                    data-target="#ftco-nav"
+                                    aria-controls="ftco-nav"
+                                    aria-expanded="false"
+                                    aria-label="Toggle navigation"
+                                >
+                                    <span className="oi oi-menu" /> Menu
+                                </button>
+                                <div className="collapse navbar-collapse" id="ftco-nav" style={{ marginLeft: "38%", marginRight: "-29%" }}>
+                                    <ul className="navbar-nav ml-auto">
+                                        <li className="nav-item active">
+                                            <a href="/" className="nav-link">
+                                                Home
                                             </a>
-                                        </li> */}
+                                        </li>
+                                        <li className="nav-item dropdown">
+                                            <a
+                                                className="nav-link "
+                                                href="/shop"
+                                            >
+                                                Shop
+                                            </a>
 
+                                        </li>
+                                        <li className="nav-item">
+                                            <a href="about.html" className="nav-link">
+                                                About
+                                            </a>
+                                        </li>
 
-                        <div class="dropdown mt-2" >
-                            <button class="btn  dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                <img style={{ width: 25 }} src="https://o.remove.bg/downloads/e4cd7f4c-438e-4357-93ec-527553f7fbb5/avatar-removebg-preview.png"></img>
-                            </button>
-                            <ul style={{ width: 30 }} class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                        <li style={{ width: 84 }} className="nav-item">
+                                        <a style={{ marginTop: "-4%" }} href="/api/login" className="nav-link">
+                                            <img style={{ width: 25 }} src="https://o.remove.bg/downloads/d2a5ba1a-0ee9-4835-a574-d2c5d67d8c73/avatar-removebg-preview.png"></img>
+                                        </a>
+                                    </li>
 
-                                <li style={{ textAlign: "center", }}>
-                                    <a onClick={() => logout()}>Log out</a>
-                                </li>
+                                    </ul>
+                                </div>
+                            </div>
 
-                            </ul>
-                        </div>
-
-
-
-                    </ul>
-                </div>
-            </div>
-
-        </>
-    )
-}
-{
-    !sessionStorage.getItem("TOKEN") && (
-        <>
-
-            <div className="d-flex">
-                <a className="navbar-brand mt-2" href="/" style={{ paddingRight: "190%", marginLeft: 46 }}>
-                    HypeSneaker
-                </a>
-                <button
-                    className="navbar-toggler"
-                    type="button"
-                    data-toggle="collapse"
-                    data-target="#ftco-nav"
-                    aria-controls="ftco-nav"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation"
-                >
-                    <span className="oi oi-menu" /> Menu
-                </button>
-                <div className="collapse navbar-collapse" id="ftco-nav">
-                    <ul className="navbar-nav ml-auto">
-                        <li className="nav-item">
-                            <a href="/" className="nav-link">
-                                Home
-                            </a>
-                        </li>
-                        <li className="nav-item">
-                            <a href="/shop" className="nav-link">
-                                Shop
-                            </a>
-                        </li>
-
-                        <li className="nav-item cta cta-colored">
-                            <a href="/cart" className="nav-link">
-                                <span className="icon-shopping_cart" />
-                                [{cartItems.reduce((total, item) => total + item.quantity, 0)}]
-                            </a>
-                        </li>
-
-                        <li style={{ width: 84 }} className="nav-item">
-                            <a style={{ marginTop: "-4%" }} href="/api/login" className="nav-link">
-                                <img style={{ width: 25 }} src="https://o.remove.bg/downloads/e4cd7f4c-438e-4357-93ec-527553f7fbb5/avatar-removebg-preview.png"></img>
-                            </a>
-                        </li>
-
-
-
-                    </ul>
-                </div>
-            </div>
+                        </nav>
         </>
     )
 }

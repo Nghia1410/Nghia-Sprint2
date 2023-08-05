@@ -1,66 +1,119 @@
-export const Cart = ({  }) => {
+import React, { useState, useEffect } from 'react';
+import Swal from 'sweetalert2';
+import { render } from 'creditcardpayments/creditCardPayments';
+// Import other dependencies, services, and models as needed
+import * as UserService from "..//service/userService"
+import * as CartService from "..//service/cartService"
+import * as ProductService from "..//service/productService"
+import { useParams } from 'react-router';
+
+export const Cart = () => {
+    const [cart, setCart] = useState([]);
+    const [cartDetailDto, setCartDetailDto] = useState([]);
+   
+    const [sum, setSum] = useState(0);
+    const [total, setTotal] = useState(0);
+    const param = useParams();
+    const ship = 30; // Assuming it's a constant
+    const [user, setUser] = useState(null); // Replace 'User' with the appropriate user model
+
+   
+    
+    useEffect(() => {
+        const listCard = async () => {
+            const rs = await CartService.getAllCart(param.username);
+           
+            setCart(rs)
+            
+        }
+        listCard();
+    }, []);
+   console.log(cart);
+
+    const getTotal = () => {
+        let newSum = 0;
+        for (const key of cartDetailDto) {
+            newSum += key.amount * key.price;
+        }
+        setSum(newSum);
+        setTotal(newSum + ship);
+        // Call the API or update the state of 'ShareService' to set the total
+    };
+
+    const minus = (cartDetailId) => {
+        const newCartDetailDto = [...cartDetailDto];
+        for (const items of newCartDetailDto) {
+            if (items.cartDetailId === cartDetailId) {
+                if (items.amount <= 1) {
+                    break;
+                } else {
+                    items.amount--;
+                    // Call the API to update the amount
+                    CartService.updateAmount(items.amount, cartDetailId).then(() => { });
+                    setSum(sum - items.price);
+                    setTotal(sum - items.price + ship);
+                    break;
+                }
+            }
+        }
+        setCartDetailDto(newCartDetailDto);
+    };
+
+    const plus = (cartDetailId) => {
+        const newCartDetailDto = [...cartDetailDto];
+        for (let i = 0; i < newCartDetailDto.length; i++) {
+            if (newCartDetailDto[i].cartDetailId === cartDetailId) {
+                newCartDetailDto[i].amount++;
+                if (newCartDetailDto[i].amount > newCartDetailDto[i].amountt) {
+                    Swal.fire({
+                        title: 'Thông báo!',
+                        text: 'Bạn không thể thêm sản phẩm vào giỏ hàng vì số lượng sản phẩm không còn trong kho.',
+                        icon: 'error',
+                        confirmButtonColor: 'darkgreen',
+                        confirmButtonText: 'OK',
+                    });
+                    newCartDetailDto[i].amount--;
+                    break;
+                } else {
+                    // Call the API to update the amount
+                    CartService.updateAmount(newCartDetailDto[i].amount, cartDetailId).then(() => { });
+                    setSum(sum + newCartDetailDto[i].price);
+                    setTotal(sum + newCartDetailDto[i].price + ship);
+                    break;
+                }
+            }
+        }
+        setCartDetailDto(newCartDetailDto);
+    };
+
+    const deleteCartDetail = (cartId, productId, productName, cartDetailId) => {
+        debugger
+        // Call the API to delete the cart detail
+        CartService.deleteCartDetail(cartId, productId).then(() => {
+            // Call the method from 'shareService' to send a click event
+            CartService.getAllCart(param.id).then((data) => {
+                setCartDetailDto(data);
+            });
+            Swal.fire({
+                title: 'Thông báo!',
+                text: `Bạn vừa xoá mặt hàng ${productName}`,
+                icon: 'success',
+                confirmButtonText: 'OK',
+            });
+            // for (const item of cartDetailDto) {
+            //     if (item.cartDetailId === cartDetailId) {
+            //         setSum(sum - item.price * item.amount);
+            //         setTotal(sum - item.price * item.amount + ship);
+            //         break;
+            //     }
+            // }
+        });
+    };
+
+
+
     return (
-        <>
-
-            {/* <nav
-                className="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light"
-                id="ftco-navbar"
-            >
-                <div className="container">
-                    <a className="navbar-brand" href="/">
-                        HypeSneaker
-                    </a>
-                    <button
-                        className="navbar-toggler"
-                        type="button"
-                        data-toggle="collapse"
-                        data-target="#ftco-nav"
-                        aria-controls="ftco-nav"
-                        aria-expanded="false"
-                        aria-label="Toggle navigation"
-                    >
-                        <span className="oi oi-menu" /> Menu
-                    </button>
-                    <div className="collapse navbar-collapse" id="ftco-nav">
-                        <ul className="navbar-nav ml-auto">
-                            <li className="nav-item">
-                                <a href="/" className="nav-link">
-                                    Home
-                                </a>
-                            </li>
-                            <li className="nav-item">
-
-                                <a className="nav-link" href="/shop">
-                                    Shop
-                                </a>
-
-                            </li>
-                            <li className="nav-item">
-                                <a href="about.html" className="nav-link">
-                                    About
-                                </a>
-                            </li>
-                            <li className="nav-item">
-                                <a href="blog.html" className="nav-link">
-                                    Blog
-                                </a>
-                            </li>
-                            <li className="nav-item">
-                                <a href="contact.html" className="nav-link">
-                                    Contact
-                                </a>
-                            </li>
-                            <li className="nav-item cta cta-colored">
-                                <a href="/cart" className="nav-link">
-                                    <span className="icon-shopping_cart" />
-                                    [0]
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </nav> */}
-            {/* END nav */}
+        <div>
             <div
                 className="hero-wrap hero-bread"
                 style={{ backgroundImage: 'url("https://hsvheartmds.com/wp-content/uploads/2016/12/stock-photo-medical-blurred-background-395854618.jpg")' }}
@@ -96,83 +149,48 @@ export const Cart = ({  }) => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {/* {cartItems.map((item, index) => ( */}
-                                            < tr className="text-center"
-                                            //  key={index} 
-                                             >
-                                                <td className="product-remove">
-                                                    <a href="#">
-                                                        <span className="ion-ios-close" />
-                                                    </a>
-                                                </td>
-                                                <td className="image-prod">
-                                                    <div
-                                                        className="img"
-                                                        // style={{ backgroundImage: `url(${item.image})` }}
-                                                    />
-                                                </td>
-                                                <td className="product-name">
-                                                    {/* <h3>{item.nameProduct}</h3> */}
-                                                    <p>
-                                                        Far far away, behind the word mountains, far from the
-                                                        countries
-                                                    </p>
-                                                </td>
-                                                <td className="price">
-                                                    {/* {item.price} */}
-                                                    </td>
-                                                <td className="quantity">
-                                                    <div className="input-group mb-3">
-                                                        <input
-                                                            type="text"
-                                                            name="quantity"
-                                                            className="quantity form-control input-number"
-                                                            defaultValue={1}
-                                                            min={1}
-                                                            max={100}
-                                                        />
-                                                    </div>
-                                                </td>
-                                                <td className="total">$4.90</td>
-                                            </tr>
-
-                                        {/* ))} */}
-
-                                        {/* END TR*/}
-                                        <tr className="text-center">
+                                        {cart?.map((item, index) => (
+                                         <tr className="text-center" key={index}>
                                             <td className="product-remove">
-                                                <a href="#">
-                                                    <span className="ion-ios-close" />
+                                            <a href="#" onClick={() => deleteCartDetail(item.cartId, item.productId, item.productName, item.cartDetailId)}>                                                    <span className="ion-ios-close" />
                                                 </a>
                                             </td>
                                             <td className="image-prod">
-                                                <div
-                                                    className="img"
-                                                    style={{ backgroundImage: "url(images/product-4.jpg)" }}
-                                                />
+                                               
+                                                <div >
+                                                      <img style={{width:140}} src={item.image}></img>
+                                                </div>
+                                              
                                             </td>
                                             <td className="product-name">
-                                                <h3>Nike Free RN 2019 iD</h3>
-                                                <p>
-                                                    Far far away, behind the word mountains, far from the
-                                                    countries
-                                                </p>
+                                                <h3>{item.productName}</h3>
+                                               
                                             </td>
-                                            <td className="price">$15.70</td>
+                                           
+
+                                            <td className="price">
+                                            <span style={{ fontFamily: "Cabin" }}>đ {new Intl.NumberFormat().format(item.price)}</span>
+                                            </td>
                                             <td className="quantity">
                                                 <div className="input-group mb-3">
                                                     <input
                                                         type="text"
                                                         name="quantity"
                                                         className="quantity form-control input-number"
-                                                        defaultValue={1}
-                                                        min={1}
-                                                        max={100}
+                                                        defaultValue={item.amount}
+                                                      
+                                                        
                                                     />
+                                                    
                                                 </div>
                                             </td>
                                             <td className="total">$15.70</td>
                                         </tr>
+
+                                         ))} 
+
+                                        {/* END TR*/}
+                                     
                                         {/* END TR*/}
                                     </tbody>
                                 </table>
@@ -359,8 +377,7 @@ export const Cart = ({  }) => {
                     </div>
                 </div>
             </footer>
-        </>
-    )
-
-
-}
+            {/* <div id="myPaypalButtons"></div> */}
+        </div>
+    );
+};
