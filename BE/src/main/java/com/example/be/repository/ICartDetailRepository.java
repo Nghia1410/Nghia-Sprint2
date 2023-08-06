@@ -19,7 +19,7 @@ public interface ICartDetailRepository extends JpaRepository<CartDetail, Integer
             "    join cart_detail as cd on cd.product_id = p.product_id \n" +
             "    join cart as c on cd.cart_id = c.cart_id \n" +
             "    join user as u on u.user_id = c.user_id "+
-            "    where u.username = :username and cd.delete_status = false order by cd.cart_detail_id desc ", nativeQuery = true)
+            "    where u.username = :username and cd.delete_status = false and c.pay_status = false order by cd.cart_detail_id desc ", nativeQuery = true)
     List<ICartDetailDto> findAll(@Param("username") String username);
 
 

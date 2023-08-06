@@ -1,3 +1,4 @@
+import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
 import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import { render } from 'creditcardpayments/creditCardPayments';
@@ -8,105 +9,61 @@ import * as ProductService from "..//service/productService"
 import { useParams } from 'react-router';
 
 export const Cart = () => {
+    const [userId, setUserId] = useState(0);
     const [cart, setCart] = useState([]);
     const [cartDetailDto, setCartDetailDto] = useState([]);
-   
+    const username = sessionStorage.getItem('USERNAME');
+
     const [sum, setSum] = useState(0);
     const [total, setTotal] = useState(0);
     const param = useParams();
     const ship = 30; // Assuming it's a constant
     const [user, setUser] = useState(null); // Replace 'User' with the appropriate user model
 
-   
-    
+
+
+    useEffect(() => {
+        const getUserName = async () => {
+            const rs = await UserService.findUserName(username);
+            console.log(rs);
+            setUserId(rs)
+        }
+        getUserName();
+    }, []);
+
+    const calculateTotalSum = () => {
+        let totalSum = 0;
+        for (const item of cart) {
+            totalSum += item.price * item.amount;
+        }
+        return totalSum;
+    };
+
     useEffect(() => {
         const listCard = async () => {
             const rs = await CartService.getAllCart(param.username);
-           
+
             setCart(rs)
-            
+
         }
         listCard();
     }, []);
-   console.log(cart);
+    console.log(cart);
 
-    const getTotal = () => {
-        let newSum = 0;
-        for (const key of cartDetailDto) {
-            newSum += key.amount * key.price;
-        }
-        setSum(newSum);
-        setTotal(newSum + ship);
-        // Call the API or update the state of 'ShareService' to set the total
-    };
 
-    const minus = (cartDetailId) => {
-        const newCartDetailDto = [...cartDetailDto];
-        for (const items of newCartDetailDto) {
-            if (items.cartDetailId === cartDetailId) {
-                if (items.amount <= 1) {
-                    break;
-                } else {
-                    items.amount--;
-                    // Call the API to update the amount
-                    CartService.updateAmount(items.amount, cartDetailId).then(() => { });
-                    setSum(sum - items.price);
-                    setTotal(sum - items.price + ship);
-                    break;
-                }
-            }
-        }
-        setCartDetailDto(newCartDetailDto);
-    };
-
-    const plus = (cartDetailId) => {
-        const newCartDetailDto = [...cartDetailDto];
-        for (let i = 0; i < newCartDetailDto.length; i++) {
-            if (newCartDetailDto[i].cartDetailId === cartDetailId) {
-                newCartDetailDto[i].amount++;
-                if (newCartDetailDto[i].amount > newCartDetailDto[i].amountt) {
-                    Swal.fire({
-                        title: 'Thông báo!',
-                        text: 'Bạn không thể thêm sản phẩm vào giỏ hàng vì số lượng sản phẩm không còn trong kho.',
-                        icon: 'error',
-                        confirmButtonColor: 'darkgreen',
-                        confirmButtonText: 'OK',
-                    });
-                    newCartDetailDto[i].amount--;
-                    break;
-                } else {
-                    // Call the API to update the amount
-                    CartService.updateAmount(newCartDetailDto[i].amount, cartDetailId).then(() => { });
-                    setSum(sum + newCartDetailDto[i].price);
-                    setTotal(sum + newCartDetailDto[i].price + ship);
-                    break;
-                }
-            }
-        }
-        setCartDetailDto(newCartDetailDto);
-    };
 
     const deleteCartDetail = (cartId, productId, productName, cartDetailId) => {
-        debugger
         // Call the API to delete the cart detail
         CartService.deleteCartDetail(cartId, productId).then(() => {
-            // Call the method from 'shareService' to send a click event
-            CartService.getAllCart(param.id).then((data) => {
-                setCartDetailDto(data);
-            });
+            // Update the cart state to remove the deleted item
+            setCart((prevCart) => prevCart.filter((item) => item.cartDetailId !== cartDetailId));
+    
             Swal.fire({
                 title: 'Thông báo!',
                 text: `Bạn vừa xoá mặt hàng ${productName}`,
                 icon: 'success',
                 confirmButtonText: 'OK',
             });
-            // for (const item of cartDetailDto) {
-            //     if (item.cartDetailId === cartDetailId) {
-            //         setSum(sum - item.price * item.amount);
-            //         setTotal(sum - item.price * item.amount + ship);
-            //         break;
-            //     }
-            // }
         });
     };
 
@@ -136,65 +93,80 @@ export const Cart = () => {
                 <div className="container">
                     <div className="row">
                         <div className="col-md-12 ">
-                            <div className="cart-list">
-                                <table className="table">
-                                    <thead className="thead-primary">
-                                        <tr className="text-center">
-                                            <th>&nbsp;</th>
-                                            <th>&nbsp;</th>
-                                            <th>Product</th>
-                                            <th>Price</th>
-                                            <th>Quantity</th>
-                                            <th>Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {cart?.map((item, index) => (
-                                         <tr className="text-center" key={index}>
-                                            <td className="product-remove">
-                                            <a href="#" onClick={() => deleteCartDetail(item.cartId, item.productId, item.productName, item.cartDetailId)}>                                                    <span className="ion-ios-close" />
-                                                </a>
-                                            </td>
-                                            <td className="image-prod">
-                                               
-                                                <div >
-                                                      <img style={{width:140}} src={item.image}></img>
-                                                </div>
-                                              
-                                            </td>
-                                            <td className="product-name">
-                                                <h3>{item.productName}</h3>
-                                               
-                                            </td>
-                                           
 
-                                            <td className="price">
-                                            <span style={{ fontFamily: "Cabin" }}>đ {new Intl.NumberFormat().format(item.price)}</span>
-                                            </td>
-                                            <td className="quantity">
-                                                <div className="input-group mb-3">
-                                                    <input
-                                                        type="text"
-                                                        name="quantity"
-                                                        className="quantity form-control input-number"
-                                                        defaultValue={item.amount}
-                                                      
-                                                        
-                                                    />
-                                                    
-                                                </div>
-                                            </td>
-                                            <td className="total">$15.70</td>
-                                        </tr>
+                            {cart.length === 0 ? (
+                                <div className="text-center m-5">
 
-                                         ))} 
+                                    <img
+                                        src="https://assets.materialup.com/uploads/16e7d0ed-140b-4f86-9b7e-d9d1c04edb2b/preview.png"
+                                        alt="Empty Cart"
+                                        height="210"
+                                        width="300"
+                                    />
+                                    <h1 style={{ textAlign: "center" }}>EMPTY CART</h1>
+                                </div>
+                            ) : (
 
-                                        {/* END TR*/}
-                                     
-                                        {/* END TR*/}
-                                    </tbody>
-                                </table>
-                            </div>
+                                <div className="cart-list">
+                                    <table className="table">
+                                        <thead className="thead-primary">
+                                            <tr className="text-center">
+                                                <th>&nbsp;</th>
+                                                <th>&nbsp;</th>
+                                                <th>Product</th>
+                                                <th>Price</th>
+                                                <th>Quantity</th>
+                                                <th>Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {cart?.map((item, index) => (
+                                                <tr className="text-center" key={index}>
+                                                    <td className="product-remove">
+                                                        <a href="#" onClick={() => deleteCartDetail(item.cartId, item.productId, item.productName, item.cartDetailId)}> 
+                                                          <span className="ion-ios-close" />
+                                                        </a>
+                                                    </td>
+                                                    <td className="image-prod">
+
+                                                        <div >
+                                                            <img style={{ width: 140 }} src={item.image}></img>
+                                                        </div>
+
+                                                    </td>
+                                                    <td className="product-name">
+                                                        <h3>{item.productName}</h3>
+
+                                                    </td>
+
+
+                                                    <td className="price">
+                                                        <span style={{ fontFamily: "Cabin" }}>đ {new Intl.NumberFormat().format(item.price)}</span>
+                                                    </td>
+                                                    <td className="quantity">
+                                                        <div className="input-group mb-3">
+                                                            <input
+                                                                type="text"
+                                                                name="quantity"
+                                                                className="quantity form-control input-number"
+                                                                defaultValue={item.amount}
+
+
+                                                            />
+
+                                                        </div>
+                                                    </td>
+                                                    <td className="total">{Intl.NumberFormat().format(item.price * item.amount)} VND</td>                                                </tr>
+
+                                            ))}
+
+                                            {/* END TR*/}
+
+                                            {/* END TR*/}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            )}
                         </div>
                     </div>
                     <div className="row justify-content-start">
@@ -203,27 +175,57 @@ export const Cart = () => {
                                 <h3>Cart Totals</h3>
                                 <p className="d-flex">
                                     <span>Subtotal</span>
-                                    <span>$20.60</span>
+                                    <span className="text-end">{Intl.NumberFormat().format(calculateTotalSum())} VND</span>
                                 </p>
+
                                 <p className="d-flex">
-                                    <span>Delivery</span>
-                                    <span>$0.00</span>
-                                </p>
-                                <p className="d-flex">
-                                    <span>Discount</span>
-                                    <span>$3.00</span>
+                                    <span>Ship</span>
+                                    <span className="text-end">30.000 VND</span>
                                 </p>
                                 <hr />
                                 <p className="d-flex total-price">
                                     <span>Total</span>
-                                    <span>$17.60</span>
+                                    <span className="text-end">{Intl.NumberFormat().format(calculateTotalSum() + 30000)} VND</span>
                                 </p>
                             </div>
-                            <p className="text-center">
-                                <a href="checkout.html" className="btn btn-primary py-3 px-4">
-                                    Proceed to Checkout
-                                </a>
-                            </p>
+                            <PayPalScriptProvider>
+                                <PayPalButtons
+                                    createOrder={(data, actions) => {
+                                        return actions.order.create({
+                                            purchase_units: [
+                                                {
+                                                    amount: {
+                                                        value: calculateTotalSum(),
+                                                    },
+                                                },
+                                            ],
+                                        });
+                                    }}
+                                    onApprove={(data, actions) => {
+                                        return actions.order.capture().then(function () {
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'Payment success',
+                                                showConfirmButton: false,
+                                                timer: 1000,
+                                            });
+
+                                            // Clear the cart after successful payment
+                                            CartService.setCart(userId).then((updatedCartData) => {
+                                                setCart(updatedCartData);
+                                            });
+
+                                            // You might also want to clear the cart in the database via an API call
+                                            // Example: CartService.clearCart(userId);
+                                        });
+                                    }}
+                                />
+                            </PayPalScriptProvider>
+
+
+
+
+
                         </div>
                     </div>
                 </div>

@@ -33,8 +33,8 @@ export function Shop() {
 
   const [userId, setUserId] = useState(0);
   const username = sessionStorage.getItem('USERNAME');
-    const [productId, setProductId] = useState(1); 
-    const [amount, setAmount] = useState(1); 
+  const [productId, setProductId] = useState(1); 
+  const [amount, setAmount] = useState(1); 
    
 
     useEffect(() => {
