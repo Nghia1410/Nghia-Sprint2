@@ -1,13 +1,28 @@
 import * as productService from "../service/productService"
 import React, { useEffect, useState } from "react"
 import { useParams } from "react-router";
+import { NavLink } from "react-router-dom";
+import "..//css/detail.css"
 
 export function Detail() {
-    const [product, setProduct] = useState({})
-    const param = useParams()
+    const [product1, setProduct1] = useState([]);
+    const [itemsToShow, setItemsToShow] = useState(8);
+    const [itemsPerLoad, setItemsPerLoad] = useState(4);
+    const [product, setProduct] = useState({});
+    const param = useParams();
+  
 
+    const handleLoadMore = () => {
+        setItemsToShow(prevItems => prevItems + itemsPerLoad);
+    };
 
-    console.log(product);
+    useEffect(() => {
+        const showList = async () => {
+            const rs = await productService.findAllProduct();
+            setProduct1(rs)
+        }
+        showList()
+    }, []);
 
     useEffect(() => {
         const fetchApi = async () => {
@@ -18,8 +33,8 @@ export function Detail() {
     }, [param.id])
 
     return (
-           <>
-           
+        <>
+
             <div
                 className="hero-wrap hero-bread"
                 style={{
@@ -94,7 +109,7 @@ export function Detail() {
                                 </p>
                             </div>
                             <h4>
-                               <b>{product.productName}</b> 
+                                <b>{product.productName}</b>
                             </h4>
                             <p className="price">
                                 <span>đ {new Intl.NumberFormat().format(product.price)}</span>
@@ -114,6 +129,9 @@ export function Detail() {
                                 her, made her drunk with Longe and Parole and dragged her into their
                                 agency, where they abused her for their.
                             </p>
+
+
+
                             <div className="row mt-4">
                                 <div className="col-md-6">
                                     <div className="form-group d-flex">
@@ -170,9 +188,6 @@ export function Detail() {
                             <p>
                                 <a href="cart.html" className="btn btn-black py-3 px-5 mr-2">
                                     Add to Cart
-                                </a>
-                                <a href="cart.html" className="btn btn-primary py-3 px-5">
-                                    Buy now
                                 </a>
                             </p>
                         </div>
@@ -433,12 +448,74 @@ export function Detail() {
                         </div>
                     </div>
                 </div>
+                <h1 class="short-underline-text" style={{textAlign:"center"}}>Other Products</h1>
+              
+                <div className="container" >
+                    <div className="row">
+                        {product1?.slice(0, itemsToShow)?.map((value, index) => (
+
+                            <div className="col-sm-12 col-md-6 col-lg-3 d-flex" key={index}>
+                                <div className="product d-flex flex-column">
+                                    <NavLink to={`/detail/${value.productId}`}>
+                                        <a className="img-prod">
+                                            <img src={value.image} className="slide_img" />
+                                            <div className="overlay" />
+                                        </a>
+                                    </NavLink>
+
+                                    <div className="text py-3 pb-4 px-3">
+                                        <div className="d-flex">
+                                            <div className="cat">
+
+                                            </div>
+                                            <div className="rating">
+                                                <p className="text-right mb-0">
+                                                    <a href="#">
+                                                        <span className="ion-ios-star-outline" />
+                                                    </a>
+                                                    <a href="#">
+                                                        <span className="ion-ios-star-outline" />
+                                                    </a>
+                                                    <a href="#">
+                                                        <span className="ion-ios-star-outline" />
+                                                    </a>
+                                                    <a href="#">
+                                                        <span className="ion-ios-star-outline" />
+                                                    </a>
+                                                    <a href="#">
+                                                        <span className="ion-ios-star-outline" />
+                                                    </a>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <h3>
+                                            <span>{value.nameProduct}</span>
+                                        </h3>
+                                        <div className="pricing">
+                                            <p className="price">
+                                                <span style={{ fontFamily: "Cabin" }}>đ {new Intl.NumberFormat().format(value.price)}</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+
+                    </div>
+                    {itemsToShow < product1.length && (
+                <div className="text-center mt-3" >
+                  <button style={{ width: "100px", marginTop: -44}} className="btn btn-primary" onClick={handleLoadMore}>
+                    Load More
+                  </button>
+                </div>
+              )}
+                </div>
             </section>}
-            <footer className="ftco-footer ftco-section">
+            <footer className="ftco-footer ftco-section" >
                 <div className="container">
                     <div className="row">
-                        <div className="mouse">
-                            <a href="#" className="mouse-icon">
+                        <div className="mouse" style={{paddingTop:20}}>
+                            <a href="#" className="mouse-icon" >
                                 <div className="mouse-wheel">
                                     <span className="ion-ios-arrow-up" />
                                 </div>

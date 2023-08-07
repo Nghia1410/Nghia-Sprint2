@@ -7,6 +7,7 @@ import { NavLink } from "react-router-dom";
 export function Home() {
     const [product, setProduct] = useState([]);
     const [itemsToShow, setItemsToShow] = useState(8); // Số sản phẩm hiển thị ban đầu
+
     useEffect(() => {
         const showList = async () => {
             const rs = await productService.findAllProduct();
@@ -15,8 +16,6 @@ export function Home() {
         showList()
     }, []);
 
-
-    console.log(product);
     return (
         <>
 
@@ -82,7 +81,7 @@ export function Home() {
                                     <NavLink to={`/detail/${value.productId}`}>
                                         <a className="img-prod">
                                             <img src={value.image} className="slide_img" />
-                                            <img style={{ width: "70px", marginLeft: "200px", marginTop: "20px" }} src="https://o.remove.bg/downloads/cb62c90b-75ef-4011-994d-94e8decf7853/new-removebg-preview__1_-removebg-preview.png" className="news_label" />
+                                            <img style={{ width: "70px", marginLeft: "200px", marginTop: "20px" }} src="https://o.remove.bg/downloads/2739450a-9120-456f-a874-6b9ea93c0ef2/new-removebg-preview__1_-removebg-preview.png" className="news_label" />
                                             <div className="overlay" />
                                         </a>
                                     </NavLink>
@@ -126,7 +125,7 @@ export function Home() {
                         ))}
                     
                     </div>
-
+                   
                 </div>
 
 
@@ -136,7 +135,7 @@ export function Home() {
                 <div className="container">
                     <div className="row">
                         <div className="col-md-6">
-                            <img style={{ width: "250%" }} src="https://o.remove.bg/downloads/1ca6e58c-31bf-4d70-8708-c6fe32268713/one-removebg-preview.png" className="img-fluid" alt="" />
+                            <img style={{ width: "250%" }} src="https://o.remove.bg/downloads/d323f0d1-f86a-4be9-8076-9af458ad2683/one-removebg-preview.png" className="img-fluid" alt="" />
                         </div>
                         <div className="col-md-6">
                             <div className="heading-section heading-section-white">

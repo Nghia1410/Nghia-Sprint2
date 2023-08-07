@@ -2,21 +2,15 @@ import axios from 'axios';
 
 export const getAllCart = async (username) => {
     try {
-        const response = await axios.get(`http://localhost:8080/api/cart/${username}`);
+        const response = await axios.get(`http://localhost:8080/api/cart/${username}`
+        );
+
         return response.data;
     } catch (error) {
         console.log(error)
     }
 };
 
-export const addToCart = async (userId, productId, amount) => {
-    try {
-        const response = await axios.get(`http://localhost:8080/api/cart/addToCart/${userId}/${productId}/${amount}`);
-        return response.data;
-    } catch (error) {
-        console.log(error)
-    }
-};
 
 export const updateAmount = async (amount, cartDetailId) => {
     try {

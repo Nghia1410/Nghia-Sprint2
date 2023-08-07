@@ -1,0 +1,20 @@
+.short-underline-text {
+    position: relative;
+    /* display: inline-block; */
+    padding-bottom: 2px; /* Điều chỉnh chiều cao của đường gạch chân */
+    font-family: serif; /* Font chữ serif */
+
+  }
+  
+  .short-underline-text::after {
+ 
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 2px; /* Chiều cao của đường gạch chân */
+    width: 10%; /* Chiều rộng của đường gạch chân (tùy chỉnh theo ý muốn) */
+    background-color: black; /* Màu sắc của đường gạch chân */
+    margin-left: 45%;
+  }
+  

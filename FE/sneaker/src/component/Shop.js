@@ -1,13 +1,10 @@
 import * as productService from "../service/productService"
 import React, { useEffect, useState } from "react"
-import * as Cart from "../component/Cart"
 import Swal from "sweetalert2"
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { QuantityContext } from "./QuantityContext";
 import { useContext } from "react";
-import * as CartService from "..//service/cartService"
 import axios from "axios";
-import { param } from "jquery";
 import * as UserService from "..//service/userService"
 
 
@@ -15,83 +12,52 @@ import * as UserService from "..//service/userService"
 
 
 export function Shop() {
-  const [items, setItems] = useState([]);
-  const [cart, setCart] = useState([]);
-  const [cartItems, setCartItems] = useState([]);
   const [productType, setProductType] = useState([])
   const [product, setProduct] = useState([]);
-  const [itemsToShow, setItemsToShow] = useState(9); // Số sản phẩm hiển thị ban đầu
+  const [itemsToShow, setItemsToShow] = useState(9);
   const [itemsPerLoad, setItemsPerLoad] = useState(3);
-  const {iconQuantity,setIconQuantity } = useContext(QuantityContext)
-  
-  const displayListProduct = async () => {
-    const res = await productService.findAllProduct();
-    setProduct(res);
-  };
-
-
-
+  const { iconQuantity, setIconQuantity } = useContext(QuantityContext)
+  const navigate = useNavigate();
   const [userId, setUserId] = useState(0);
   const username = sessionStorage.getItem('USERNAME');
-  const [productId, setProductId] = useState(1); 
-  const [amount, setAmount] = useState(1); 
-   
+  const [amount, setAmount] = useState(1);
 
-    useEffect(() => {
-      const getUserName = async () => {
-          const rs = await UserService.findUserName(username);
-          console.log(rs);
-          setUserId(rs)
-      }
-      getUserName();
+
+  useEffect(() => {
+    const getUserName = async () => {
+      const rs = await UserService.findUserName(username);
+      setUserId(rs)
+    }
+    getUserName();
   }, []);
 
 
-    const addToCart = (productId,item) => {
-      const apiUrl = `http://localhost:8080/api/cart/addToCart/${userId}/${productId}/${amount}`;
-
-      // const existingCartItem = cartItems.find(
-      //   (cartItem) => cartItem.productId === item.productId
-      // );
-  
-      // if (existingCartItem) {
-      //   const updatedCartItems = cartItems.map((cartItem) =>
-      //     cartItem.productId === item.productId
-      //       ? { ...cartItem, quantityOfProduct: cartItem.quantityOfProduct + 1 }
-      //       : cartItem
-      //   );
-        
-      //   setCartItems(updatedCartItems);
-      // } else {
-      //   setCartItems([...cartItems, { ...item, quantityOfProduct: 1 }]);
-        
-      // }
-      setIconQuantity(iconQuantity+1)
+  const addToCart = (productId, item) => {
+    if (!username) {
       Swal.fire({
-        icon: 'success',
-        title: 'Đã thêm vào giỏ hàng',
+        icon: 'error',
+        title: 'Log in to see your Cart',
         showConfirmButton: false,
-        timer: 1000
+        timer: 1500
       });
-  
- 
-      axios.get(apiUrl)
-        .then(response => {
-          Swal.fire({
-            title: 'Thông báo',
-            text: 'Thêm thành công sản phẩm vào giỏ hàng!',
-            icon: 'success',
-            confirmButtonText: 'OK'
+      navigate('/api/login')
+    }else{
+    const apiUrl = `http://localhost:8080/api/cart/addToCart/${userId}/${productId}/${amount}`;
+    setIconQuantity(iconQuantity + 1)
+    axios.get(apiUrl)
+      .then(response => {
+        Swal.fire({
+          text: 'Add to cart successfully!',
+          icon: 'success',
+          confirmButtonText: 'OK'
         })
-          console.log('Item added to cart:', response.data);
-        })
-        .catch(error => {
-          console.error('Error adding item to cart:', error.response);
-        });
-    };
+      })
+      .catch(error => {
+        console.error('Error adding item to cart:', error.response);
+      });
+  };
+  }
 
-
-  console.log(iconQuantity);
   const handleDisplayByType = async (type) => {
     const res = await productService.getAllProductByType(type);
     setProduct(res);
@@ -124,7 +90,7 @@ export function Shop() {
         className="hero-wrap hero-bread"
         style={{
           backgroundImage: 'url("https://hsvheartmds.com/wp-content/uploads/2016/12/stock-photo-medical-blurred-background-395854618.jpg")',
-          position: 'relative', 
+          position: 'relative',
           color: 'white',
         }}
       >
@@ -134,12 +100,12 @@ export function Shop() {
               <h1
                 style={{
                   paddingLeft: "28px",
-                  position: 'absolute', 
-                  top: '50%', 
+                  position: 'absolute',
+                  top: '50%',
                   left: '50%',
                   transform: 'translate(-50%, -50%)',
                   fontSize: '4rem',
-                  fontWeight: 'bold', 
+                  fontWeight: 'bold',
                   fontFamily: "fantasy"
                 }}
               >
@@ -234,16 +200,6 @@ export function Shop() {
                 <div className="sidebar-box-2">
                   <h2 className="heading" style={{ color: "black" }}>Categories</h2>
 
-                  <div className="item">
-                    <a
-                      href=""
-                      className="link flex"
-                      onClick={() => displayListProduct()}
-                    >
-                      <i className="bx bx-grid-alt"></i>
-                      <span>All</span>
-                    </a>
-                  </div>
                   {productType.map((value, index) => {
                     return (
                       <div className="fancy-collapse-panel" key={index}>

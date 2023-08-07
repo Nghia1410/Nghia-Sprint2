@@ -6,26 +6,21 @@ import { render } from 'creditcardpayments/creditCardPayments';
 import * as UserService from "..//service/userService"
 import * as CartService from "..//service/cartService"
 import * as ProductService from "..//service/productService"
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 
 export const Cart = () => {
     const [userId, setUserId] = useState(0);
     const [cart, setCart] = useState([]);
-    const [cartDetailDto, setCartDetailDto] = useState([]);
     const username = sessionStorage.getItem('USERNAME');
-
-    const [sum, setSum] = useState(0);
-    const [total, setTotal] = useState(0);
+    const navigate = useNavigate();
     const param = useParams();
     const ship = 30; // Assuming it's a constant
-    const [user, setUser] = useState(null); // Replace 'User' with the appropriate user model
-
 
 
     useEffect(() => {
         const getUserName = async () => {
             const rs = await UserService.findUserName(username);
-            console.log(rs);
+
             setUserId(rs)
         }
         getUserName();
@@ -50,14 +45,25 @@ export const Cart = () => {
     }, []);
     console.log(cart);
 
+    if (!sessionStorage.getItem("roles")) {
 
+        Swal.fire({
+            title: 'Notification!',
+            text: `You must login to see your cart`,
+            icon: 'error',
+            confirmButtonText: 'OK',
+        });
+        navigate("/login")
+        return null
+
+    }
 
     const deleteCartDetail = (cartId, productId, productName, cartDetailId) => {
         // Call the API to delete the cart detail
         CartService.deleteCartDetail(cartId, productId).then(() => {
             // Update the cart state to remove the deleted item
             setCart((prevCart) => prevCart.filter((item) => item.cartDetailId !== cartDetailId));
-    
+
             Swal.fire({
                 title: 'Thông báo!',
                 text: `Bạn vừa xoá mặt hàng ${productName}`,
@@ -93,7 +99,6 @@ export const Cart = () => {
                 <div className="container">
                     <div className="row">
                         <div className="col-md-12 ">
-
                             {cart.length === 0 ? (
                                 <div className="text-center m-5">
 
@@ -123,8 +128,8 @@ export const Cart = () => {
                                             {cart?.map((item, index) => (
                                                 <tr className="text-center" key={index}>
                                                     <td className="product-remove">
-                                                        <a href="#" onClick={() => deleteCartDetail(item.cartId, item.productId, item.productName, item.cartDetailId)}> 
-                                                          <span className="ion-ios-close" />
+                                                        <a href="#" onClick={() => deleteCartDetail(item.cartId, item.productId, item.productName, item.cartDetailId)}>
+                                                            <span className="ion-ios-close" />
                                                         </a>
                                                     </td>
                                                     <td className="image-prod">
@@ -209,14 +214,14 @@ export const Cart = () => {
                                                 showConfirmButton: false,
                                                 timer: 1000,
                                             });
-
-                                            // Clear the cart after successful payment
-                                            CartService.setCart(userId).then((updatedCartData) => {
-                                                setCart(updatedCartData);
+                                            navigate('/history')
+                                            const totalAmount = calculateTotalSum() + 30000;
+                                            CartService.saveHistory(userId, totalAmount).then(() => {
+                                                // Clear the cart after successful payment and saving the history
+                                                CartService.setCart(userId).then((updatedCartData) => {
+                                                    setCart(updatedCartData);
+                                                });
                                             });
-
-                                            // You might also want to clear the cart in the database via an API call
-                                            // Example: CartService.clearCart(userId);
                                         });
                                     }}
                                 />
@@ -379,7 +384,6 @@ export const Cart = () => {
                     </div>
                 </div>
             </footer>
-            {/* <div id="myPaypalButtons"></div> */}
         </div>
     );
 };

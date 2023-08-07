@@ -1,87 +1,40 @@
-import "../css/login.css";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import { getEmail, postLogin } from "../service/Service";
-import * as Yup from "yup";
-import { useNavigate } from "react-router-dom";
-import React, { useState } from "react";
+import React from 'react';
+import  { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
+import Swal from 'sweetalert2';
 
-
-import 'react-toastify/dist/ReactToastify.css';
-
-export function Login() {
+export function Employee() {
     const navigate = useNavigate();
-    const [failedAccount, setFailedAccount] = useState(null);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-    if (sessionStorage.getItem("TOKEN")) {
-        navigate('/');
+    useEffect(() => {
+        if (!sessionStorage.getItem("TOKEN")) {
+            Swal.fire({
+                title: 'Notification!',
+                text: `You must login to see your cart`,
+                icon: 'error',
+                confirmButtonText: 'OK', 
+            });
+            navigate("/login");
+        } else {
+            setIsLoggedIn(true);
+        }
+    }, [navigate]);
+
+    if (!isLoggedIn) {
         return null;
     }
+
     return (
-        <div id="loginPage">
-            <div className="">
-            </div>
-            <div className="">
-                <h1 className="text-center mb-5">LOGIN</h1>
-                <Formik
-                    initialValues={{
-                        username: "",
-                        password: ""
-                    }}
-
-                    validationSchema={Yup.object().shape({
-                        username: Yup.string().required("Please fill this field"),
-
-                        password: Yup.string()
-                            .required("Please fill this field")
-                    })}
-
-                    onSubmit={(values) => {
-                        postLogin(values)
-                            .then((e) => {
-                                console.log(e);
-                                sessionStorage.setItem('TOKEN', e.accessToken);
-                                sessionStorage.setItem('USERNAME', e.username);
-                                sessionStorage.setItem('USERID', e.userId);
-                                sessionStorage.setItem('roles', e.roles[0])
-
-                                window.location.href = '/';
-                            })
-                            .catch(() => {
-                                setFailedAccount("Username or password is not correct")
-                            }
-                            );
-                    }}
-                >
-                    <Form style={{ width: "35%", marginLeft: 494 }}>
-                        <div className="mb-3 input-group">
-                            <Field type="text" className="form-control" placeholder="Username"
-                                name="username" />
-                            <ErrorMessage name="username" className="text-danger col-12" component="span" />
-                        </div>
-                        <div className="mb-3 my-5 input-group">
-                            <Field type="password" className="form-control "
-                                placeholder="Password" name="password" />
-                            <ErrorMessage name="password" className="text-danger col-12" component="span" />
-                            {failedAccount && (
-                                <span className="text-danger col-12">{failedAccount}</span>
-                            )}
-                        </div>
-
-                        <button style={{ marginTop: -10 }} type="submit" className="col-12 button">SIGN IN</button>
-
-                        <div className="mb-3 " style={{ textAlign: "center", color: "#3c3c3c" }}>
-                            <a href="">Forgot password?</a>
-                        </div>
-                    </Form>
-                </Formik>
-
-            </div>
-
+        <>
+           
+            <img style={{height: 800,marginTop: 109, width: "100%"}} src="https://cdn.pixabay.com/photo/2017/10/26/17/51/under-construction-2891888_1280.jpg" alt=""/>
+        
             <footer className="ftco-footer ftco-section">
                 <div className="container">
                     <div className="row">
                         <div className="mouse">
-                            <a href="#" className="mouse-icon">
+                            <a href="#" className="mouse-icon" style={{marginTop: 20}}>
                                 <div className="mouse-wheel">
                                     <span className="ion-ios-arrow-up" />
                                 </div>
@@ -92,7 +45,6 @@ export function Login() {
                         <div className="col-md">
                             <div className="ftco-footer-widget mb-4">
                                 <h2 className="ftco-heading-2">HypeSneaker</h2>
-
                                 <p>
                                     Far far away, behind the word mountains, far from the countries
                                     Vokalia and Consonantia.
@@ -227,6 +179,9 @@ export function Login() {
                     </div>
                 </div>
             </footer>
-        </div >
-    )
+        
+        </>
+    );
 }
+
+export default Employee;

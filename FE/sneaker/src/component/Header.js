@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import "../css/header.css";
 import { Link, NavLink } from "react-router-dom";
 import Swal from "sweetalert2"
 import { useContext } from "react";
@@ -11,7 +10,6 @@ import * as UserService from "..//service/userService"
 export const Header = () => {
     const [userId, setUserId] = useState(0);
     const username = sessionStorage.getItem('USERNAME');
-    const [user, setUser] = useState([0]);
     const [cart, setCart] = useState([]);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isMediaQueryMatched, setIsMediaQueryMatched] = useState(false);
@@ -97,7 +95,7 @@ export const Header = () => {
 
             {sessionStorage.getItem("roles") === "ADMIN" && (
                 <>
-                    <nav
+                    <nav 
                         className="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light"
                         id="ftco-navbar" style={{ height: "10%" }}
                     >
@@ -132,17 +130,16 @@ export const Header = () => {
                                         </a>
 
                                     </li>
-                                    <li className="nav-item">
-                                        <a href="about.html" className="nav-link">
+                                  
+                                    <li className="nav-item active">
+                                        <a href="/employee" className="nav-link">
                                             Employee
                                         </a>
-
                                     </li>
-
                                     <NavLink to={`/cart/${username}`}>
                                         <li className="nav-item cta cta-colored">
 
-                                            <a className="nav-link" style={{marginTop: 10}}>
+                                            <a className="nav-link" >
                                                 <span className="icon-shopping_cart" />
                                                 [{iconQuantity}]
                                             </a>
@@ -212,11 +209,7 @@ export const Header = () => {
                                             </a>
 
                                         </li>
-                                        <li className="nav-item">
-                                            <a href="about.html" className="nav-link">
-                                                About
-                                            </a>
-                                        </li>
+                                     
 
                                         <NavLink to={`/cart/${username}`}>
                                             <li className="nav-item cta cta-colored">
@@ -285,15 +278,11 @@ export const Header = () => {
                                             </a>
 
                                         </li>
-                                        <li className="nav-item">
-                                            <a href="about.html" className="nav-link">
-                                                About
-                                            </a>
-                                        </li>
+                                     
 
                                         <li style={{ width: 84 }} className="nav-item">
-                                        <a style={{ marginTop: "-4%" }} href="/api/login" className="nav-link">
-                                            <img style={{ width: 25 }} src="https://o.remove.bg/downloads/d2a5ba1a-0ee9-4835-a574-d2c5d67d8c73/avatar-removebg-preview.png"></img>
+                                        <a style={{ marginTop: "-4%" }} href="/login" className="nav-link">
+                                            <img style={{ width: 25 }} src="https://o.remove.bg/downloads/b3a8cfa0-1b4d-4c26-bc4e-07adb1c203a6/avatar-removebg-preview.png"></img>
                                         </a>
                                     </li>
 
