@@ -1,0 +1,30 @@
+*{
+    box-sizing: border-box;
+}
+
+#search-box{
+    background: #ffffff;
+    border-radius: 80px;
+}
+#search-box #search-text{
+    border: none;
+    outline: none;
+    background: rgb(255, 255, 255);
+   padding: 0px;
+    font-size: 18px;
+    width: 0;
+    transition: all 0.25s ease-in-out;
+}
+#search-box:hover #search-text{
+    width: 300px;
+    padding: 10px 0px 10px 15px;
+}
+#search-box #search-btn{
+    background-color: #ffffff;
+    border: none;
+    padding: 15px;
+    cursor: pointer;
+    border-radius: 50%;
+    font-size: 18px;
+
+}

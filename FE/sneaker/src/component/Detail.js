@@ -1,16 +1,28 @@
 import * as productService from "../service/productService"
 import React, { useEffect, useState } from "react"
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { NavLink } from "react-router-dom";
 import "..//css/detail.css"
+import Swal from "sweetalert2";
+import * as UserService from "..//service/userService"
+import { QuantityContext } from "./QuantityContext";
+import axios from "axios";
+import { useContext } from "react";
+
 
 export function Detail() {
     const [product1, setProduct1] = useState([]);
     const [itemsToShow, setItemsToShow] = useState(8);
     const [itemsPerLoad, setItemsPerLoad] = useState(4);
-    const [product, setProduct] = useState({});
+    const [product, setProduct] = useState([]);
     const param = useParams();
-  
+    const { iconQuantity, setIconQuantity } = useContext(QuantityContext)
+    const navigate = useNavigate();
+    const [userId, setUserId] = useState(0);
+    const username = sessionStorage.getItem('USERNAME');
+    const role = sessionStorage.getItem('roles');
+    const [amount, setAmount] = useState(1);
+
 
     const handleLoadMore = () => {
         setItemsToShow(prevItems => prevItems + itemsPerLoad);
@@ -32,6 +44,56 @@ export function Detail() {
         fetchApi()
     }, [param.id])
 
+
+    useEffect(() => {
+        const getUserName = async () => {
+            const rs = await UserService.findUserName(username);
+            setUserId(rs)
+        }
+        getUserName();
+    }, []);
+
+
+    const addToCart = (productId, item) => {
+        const apiUrl = `http://localhost:8080/v2/cart/addToCart/${userId}/${productId}/${amount}`;
+
+        setIconQuantity(iconQuantity + 1);
+
+        const config = {
+            headers: {
+                'Authorization': 'Bearer ' + sessionStorage.getItem("TOKEN"),
+            },
+        };
+
+        axios.get(apiUrl, config)
+            .then(response => {
+                Swal.fire({
+                    title: 'Notification',
+                    text: 'Add to cart successfully!',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+            })
+            .catch(error => {
+                console.error('Error adding item to cart:', error.response);
+            });
+
+
+    }
+    const handleAddToCartClick = (productId) => {
+        if (!userId) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Log in to see your Cart',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            navigate('/login')
+        }
+        else {
+            addToCart(productId);
+        }
+    };
     return (
         <>
 
@@ -186,7 +248,8 @@ export function Detail() {
                                 </div>
                             </div>
                             <p>
-                                <a href="cart.html" className="btn btn-black py-3 px-5 mr-2">
+
+                                <a className="btn btn-black py-3 px-5 mr-2" style={{ color: "white" }} onClick={() => handleAddToCartClick(product.productId)}>
                                     Add to Cart
                                 </a>
                             </p>
@@ -448,16 +511,16 @@ export function Detail() {
                         </div>
                     </div>
                 </div>
-                <h1 class="short-underline-text" style={{textAlign:"center"}}>Other Products</h1>
-              
+                <h1 class="short-underline-text" style={{ textAlign: "center" }}>Other Products</h1>
+
                 <div className="container" >
                     <div className="row">
                         {product1?.slice(0, itemsToShow)?.map((value, index) => (
 
                             <div className="col-sm-12 col-md-6 col-lg-3 d-flex" key={index}>
                                 <div className="product d-flex flex-column">
-                                    <NavLink to={`/detail/${value.productId}`}>
-                                        <a className="img-prod">
+                                    <NavLink to={`/detail/${value.productId}`} onClick={() => window.scrollTo(0, 0)}>
+                                        <a className="img-prod" onClick={() => window.scrollTo(0, 0)}>
                                             <img src={value.image} className="slide_img" />
                                             <div className="overlay" />
                                         </a>
@@ -489,7 +552,7 @@ export function Detail() {
                                             </div>
                                         </div>
                                         <h3>
-                                            <span>{value.nameProduct}</span>
+                                            <span>{value.productName}</span>
                                         </h3>
                                         <div className="pricing">
                                             <p className="price">
@@ -503,18 +566,19 @@ export function Detail() {
 
                     </div>
                     {itemsToShow < product1.length && (
-                <div className="text-center mt-3" >
-                  <button style={{ width: "100px", marginTop: -44}} className="btn btn-primary" onClick={handleLoadMore}>
-                    Load More
-                  </button>
+                        <div className="text-center mt-3" >
+                            <button style={{ width: "100px", marginTop: -44 }} className="btn btn-primary" onClick={handleLoadMore}>
+                                Load More
+                            </button>
+                        </div>
+                    )}
                 </div>
-              )}
-                </div>
+
             </section>}
             <footer className="ftco-footer ftco-section" >
                 <div className="container">
                     <div className="row">
-                        <div className="mouse" style={{paddingTop:20}}>
+                        <div className="mouse" style={{ paddingTop: 20 }}>
                             <a href="#" className="mouse-icon" >
                                 <div className="mouse-wheel">
                                     <span className="ion-ios-arrow-up" />

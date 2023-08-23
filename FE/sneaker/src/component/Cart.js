@@ -1,43 +1,36 @@
 import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Swal from 'sweetalert2';
-import { render } from 'creditcardpayments/creditCardPayments';
-// Import other dependencies, services, and models as needed
 import * as UserService from "..//service/userService"
 import * as CartService from "..//service/cartService"
-import * as ProductService from "..//service/productService"
 import { useNavigate, useParams } from 'react-router';
+import { QuantityContext } from './QuantityContext';
+
 
 export const Cart = () => {
     const [userId, setUserId] = useState(0);
     const [cart, setCart] = useState([]);
     const username = sessionStorage.getItem('USERNAME');
-    const navigate = useNavigate();
     const param = useParams();
-    const ship = 30; // Assuming it's a constant
+    const [productQuantities, setProductQuantities] = useState({});
+    const navigate = useNavigate();
+    const { iconQuantity, setIconQuantity } = useContext(QuantityContext)
+
 
 
     useEffect(() => {
         const getUserName = async () => {
             const rs = await UserService.findUserName(username);
-
+            console.log(rs);
             setUserId(rs)
         }
         getUserName();
     }, []);
 
-    const calculateTotalSum = () => {
-        let totalSum = 0;
-        for (const item of cart) {
-            totalSum += item.price * item.amount;
-        }
-        return totalSum;
-    };
 
     useEffect(() => {
         const listCard = async () => {
             const rs = await CartService.getAllCart(param.username);
-
             setCart(rs)
 
         }
@@ -45,35 +38,86 @@ export const Cart = () => {
     }, []);
     console.log(cart);
 
-    if (!sessionStorage.getItem("roles")) {
+    useEffect(() => {
+        const listCard = async () => {
+            if (!username) {
+                Swal.fire({
+                    title: 'Thông báo!',
+                    text: `Please log in to see cart`,
+                    icon: 'error',
+                    confirmButtonText: 'OK',
+                });
+                navigate("/login")
+            }
+            else {
+                const rs = await CartService.getAllCart(param.username);
 
+                setCart(rs)
+            }
+        }
+        listCard();
+    }, []);
+
+
+
+    const deleteCartDetail1 = (image, cartId, productId, productName, cartDetailId) => {
         Swal.fire({
-            title: 'Notification!',
-            text: `You must login to see your cart`,
-            icon: 'error',
-            confirmButtonText: 'OK',
-        });
-        navigate("/login")
-        return null
+            imageUrl: image,
+            imageWidth: 500,
+            imageHeight: 300,
+            html: ` Do you want to delete<span style="color: red;"> ${productName}? </span>`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes',
+            cancelButtonText: "No"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                CartService.deleteCartDetail(cartId, productId).then(() => {
+                    setCart((prevCart) => prevCart.filter((item) => item.cartDetailId !== cartDetailId));
+                    // setIconQuantity((prevQuantity) => prevQuantity - 1);
+                });
+                Swal.fire({
+                    icon: 'success',
+                    text: "Delete Successfully !"
+                })
+            }
+        })
 
-    }
-
-    const deleteCartDetail = (cartId, productId, productName, cartDetailId) => {
-        // Call the API to delete the cart detail
-        CartService.deleteCartDetail(cartId, productId).then(() => {
-            // Update the cart state to remove the deleted item
-            setCart((prevCart) => prevCart.filter((item) => item.cartDetailId !== cartDetailId));
-
-            Swal.fire({
-                title: 'Thông báo!',
-                text: `Bạn vừa xoá mặt hàng ${productName}`,
-                icon: 'success',
-                confirmButtonText: 'OK',
-            });
-        });
+    };
+    const calculateTotalSum = () => {
+        let totalSum = 0;
+        for (const item of cart) {
+            const productQuantity = productQuantities[item.productId] || item.amount;
+            totalSum += item.price * productQuantity + 30000;
+        }
+        return totalSum;
     };
 
+    const handleQuantityChange = (productId, newQuantity) => {
+        setProductQuantities((prevQuantities) => ({
+            ...prevQuantities,
+            [productId]: newQuantity,
+        }));
+    };
 
+    const increaseQuantity = (productId) => {
+        const newQuantity = (productQuantities[productId] || 0) + 1;
+        handleQuantityChange(productId, newQuantity);
+
+        setIconQuantity((prevQuantity) => prevQuantity + 1);
+    };
+
+    const decreaseQuantity = (productId) => {
+        if (productQuantities[productId] > 1) {
+            const newQuantity = productQuantities[productId] - 1;
+            handleQuantityChange(productId, newQuantity);
+            setIconQuantity((prevQuantity) => prevQuantity - 1);
+        } else {
+            console.log("Số lượng đã ở mức tối thiểu.");
+        }
+    };
 
     return (
         <div>
@@ -110,129 +154,138 @@ export const Cart = () => {
                                     />
                                     <h1 style={{ textAlign: "center" }}>EMPTY CART</h1>
                                 </div>
-                            ) : (
+                            )
+                                : (
+                                    <div>
+                                        <div className="cart-list">
+                                            <table className="table">
+                                                <thead className="thead-primary">
+                                                    <tr className="text-center">
+                                                        <th>&nbsp;</th>
+                                                        <th>&nbsp;</th>
+                                                        <th>Product</th>
+                                                        <th>Price</th>
+                                                        <th>Quantity</th>
+                                                        <th>Total</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {cart?.map((item, index) => (
+                                                        <tr className="text-center" key={index}>
+                                                            <td className="product-remove">
+                                                                <a href="#" onClick={() => deleteCartDetail1(item.image, item.cartId, item.productId, item.productName, item.cartDetailId)}>
+                                                                    <span className="ion-ios-close" />
+                                                                </a>
+                                                            </td>
+                                                            <td className="image-prod">
 
-                                <div className="cart-list">
-                                    <table className="table">
-                                        <thead className="thead-primary">
-                                            <tr className="text-center">
-                                                <th>&nbsp;</th>
-                                                <th>&nbsp;</th>
-                                                <th>Product</th>
-                                                <th>Price</th>
-                                                <th>Quantity</th>
-                                                <th>Total</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {cart?.map((item, index) => (
-                                                <tr className="text-center" key={index}>
-                                                    <td className="product-remove">
-                                                        <a href="#" onClick={() => deleteCartDetail(item.cartId, item.productId, item.productName, item.cartDetailId)}>
-                                                            <span className="ion-ios-close" />
-                                                        </a>
-                                                    </td>
-                                                    <td className="image-prod">
+                                                                <div >
+                                                                    <img style={{ width: 140 }} src={item.image}></img>
+                                                                </div>
 
-                                                        <div >
-                                                            <img style={{ width: 140 }} src={item.image}></img>
-                                                        </div>
+                                                            </td>
+                                                            <td className="product-name">
+                                                                <h3>{item.productName}</h3>
 
-                                                    </td>
-                                                    <td className="product-name">
-                                                        <h3>{item.productName}</h3>
-
-                                                    </td>
-
-
-                                                    <td className="price">
-                                                        <span style={{ fontFamily: "Cabin" }}>đ {new Intl.NumberFormat().format(item.price)}</span>
-                                                    </td>
-                                                    <td className="quantity">
-                                                        <div className="input-group mb-3">
-                                                            <input
-                                                                type="text"
-                                                                name="quantity"
-                                                                className="quantity form-control input-number"
-                                                                defaultValue={item.amount}
+                                                            </td>
 
 
-                                                            />
+                                                            <td className="price">
+                                                                <span style={{ fontFamily: "Cabin" }}>đ {new Intl.NumberFormat().format(item.price)}</span>
+                                                            </td>
 
-                                                        </div>
-                                                    </td>
-                                                    <td className="total">{Intl.NumberFormat().format(item.price * item.amount)} VND</td>                                                </tr>
+                                                            <td>
+                                                                <div style={{ marginTop: 8 }}>
+                                                                    <div style={{ display: "flex", marginLeft: 42 }}>
+                                                                        <button style={{ width: 62 }} onClick={() => decreaseQuantity(item.productId)}>
+                                                                            -
+                                                                        </button>
+                                                                        <input
+                                                                            style={{ width: '40px', textAlign: 'center' }}
+                                                                            type="text"
+                                                                            name="quantity"
+                                                                            className="quantity form-control input-number"
+                                                                            defaultValue={item.amount}
+                                                                            min={1}
+                                                                            max={100}
+                                                                            value={productQuantities[item.productId] || 1}
+                                                                            readOnly
+                                                                        />
+                                                                        <button style={{ width: 62 }} onClick={() => increaseQuantity(item.productId)}>
+                                                                            +
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td className="total">
+                                                                {Intl.NumberFormat().format(item.price * (productQuantities[item.productId] || item.amount))} VND
+                                                            </td>
+                                                        </tr>
 
-                                            ))}
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div className="row justify-content-start">
+                                            <div className="col col-lg-5 col-md-6 mt-5 cart-wrap ">
+                                                <div className="cart-total mb-3">
+                                                    <h3>Cart Totals</h3>
+                                                    <p className="d-flex">
+                                                        <span>Subtotal</span>
+                                                        <span className="text-end">{Intl.NumberFormat().format(calculateTotalSum())} VND</span>
+                                                    </p>
 
-                                            {/* END TR*/}
+                                                    <p className="d-flex">
+                                                        <span>Ship</span>
+                                                        <span className="text-end">30.000 VND</span>
+                                                    </p>
+                                                    <hr />
+                                                    <p className="d-flex total-price">
+                                                        <span>Total</span>
+                                                        <span className="text-end">{Intl.NumberFormat().format(calculateTotalSum() + 30000)} VND</span>
+                                                    </p>
+                                                </div>
+                                                <PayPalScriptProvider>
+                                                    <PayPalButtons
+                                                        createOrder={(data, actions) => {
+                                                            return actions.order.create({
+                                                                purchase_units: [
+                                                                    {
+                                                                        amount: {
+                                                                            value: (calculateTotalSum / 24000).toString().slice(0, 4),
+                                                                            currency_code: 'USD'
+                                                                        },
+                                                                    },
+                                                                ],
+                                                            });
+                                                        }}
+                                                        onApprove={(data, actions) => {
+                                                            return actions.order.capture().then(function () {
+                                                                Swal.fire({
+                                                                    icon: 'success',
+                                                                    title: 'Payment success',
+                                                                    showConfirmButton: false,
+                                                                    timer: 1000,
+                                                                });
+                                                                const totalAmount = calculateTotalSum();
+                                                                CartService.saveHistory(userId, totalAmount).then(() => {
+                                                                    CartService.setCart(userId).then((updatedCartData) => {
+                                                                        setCart(updatedCartData);
+                                                                    });
+                                                                });
+                                                                navigate('/history')
+                                                            });
+                                                        }}
+                                                    />
+                                                </PayPalScriptProvider>
+                                            </div>
+                                        </div>
+                                    </div>
 
-                                            {/* END TR*/}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            )}
+                                )}
                         </div>
                     </div>
-                    <div className="row justify-content-start">
-                        <div className="col col-lg-5 col-md-6 mt-5 cart-wrap ">
-                            <div className="cart-total mb-3">
-                                <h3>Cart Totals</h3>
-                                <p className="d-flex">
-                                    <span>Subtotal</span>
-                                    <span className="text-end">{Intl.NumberFormat().format(calculateTotalSum())} VND</span>
-                                </p>
 
-                                <p className="d-flex">
-                                    <span>Ship</span>
-                                    <span className="text-end">30.000 VND</span>
-                                </p>
-                                <hr />
-                                <p className="d-flex total-price">
-                                    <span>Total</span>
-                                    <span className="text-end">{Intl.NumberFormat().format(calculateTotalSum() + 30000)} VND</span>
-                                </p>
-                            </div>
-                            <PayPalScriptProvider>
-                                <PayPalButtons
-                                    createOrder={(data, actions) => {
-                                        return actions.order.create({
-                                            purchase_units: [
-                                                {
-                                                    amount: {
-                                                        value: calculateTotalSum(),
-                                                    },
-                                                },
-                                            ],
-                                        });
-                                    }}
-                                    onApprove={(data, actions) => {
-                                        return actions.order.capture().then(function () {
-                                            Swal.fire({
-                                                icon: 'success',
-                                                title: 'Payment success',
-                                                showConfirmButton: false,
-                                                timer: 1000,
-                                            });
-                                            navigate('/history')
-                                            const totalAmount = calculateTotalSum() + 30000;
-                                            CartService.saveHistory(userId, totalAmount).then(() => {
-                                                // Clear the cart after successful payment and saving the history
-                                                CartService.setCart(userId).then((updatedCartData) => {
-                                                    setCart(updatedCartData);
-                                                });
-                                            });
-                                        });
-                                    }}
-                                />
-                            </PayPalScriptProvider>
-
-
-
-
-
-                        </div>
-                    </div>
                 </div>
             </section >
             <footer className="ftco-footer ftco-section">

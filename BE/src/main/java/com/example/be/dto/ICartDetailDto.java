@@ -18,4 +18,18 @@ public interface ICartDetailDto {
     Integer getProductId();
 
     Integer getAmountt();
+
+    Integer getIdHistory();
+
+    String getOrderDate();
+
+    String getTotal();
+
+    Integer idHistory();
+
+    String getUsername();
+
+    String getCodeBill();
+
+
 }

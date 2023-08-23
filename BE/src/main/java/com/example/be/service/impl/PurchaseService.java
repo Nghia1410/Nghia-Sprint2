@@ -1,5 +1,6 @@
 package com.example.be.service.impl;
 
+import com.example.be.dto.ICartDetailDto;
 import com.example.be.model.PurchaseHistory;
 import com.example.be.repository.IPurchaseRepository;
 import com.example.be.service.IPurchaseService;
@@ -14,7 +15,7 @@ public class PurchaseService implements IPurchaseService {
     private IPurchaseRepository iPurchaseRepository;
 
     @Override
-    public List<PurchaseHistory> findAllByUserId(Integer userId) {
+    public List<ICartDetailDto> findAllByUserId(Integer userId) {
         return iPurchaseRepository.findAllnByUserId(userId);
     }
 

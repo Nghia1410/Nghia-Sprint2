@@ -1,6 +1,6 @@
 import './App.css';
 import React from "react";
-import { Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { Login } from './component/Login';
 import { Home } from './component/home';
 import { Shop } from './component/Shop';
@@ -23,11 +23,10 @@ function App() {
           <Route path='/shop' element={<Shop />} />
           <Route path='/detail/:id' element={<Detail />} />
           <Route path='/history' element={<History />} />
-          <Route path='/cart/:username' element={<Cart />} />
+          <Route path='/v2/cart/:username' element={<Cart />} />
           <Route path='/employee' element={<Employee />} />
         </Routes>
       </QuantityProvider>
-
     </>
   );
 }

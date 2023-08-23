@@ -6,7 +6,7 @@ import { NavLink } from "react-router-dom";
 
 export function Home() {
     const [product, setProduct] = useState([]);
-    const [itemsToShow, setItemsToShow] = useState(8); // Số sản phẩm hiển thị ban đầu
+    const [itemsToShow, setItemsToShow] = useState(8);
 
     useEffect(() => {
         const showList = async () => {
@@ -81,7 +81,7 @@ export function Home() {
                                     <NavLink to={`/detail/${value.productId}`}>
                                         <a className="img-prod">
                                             <img src={value.image} className="slide_img" />
-                                            <img style={{ width: "70px", marginLeft: "200px", marginTop: "20px" }} src="https://o.remove.bg/downloads/2739450a-9120-456f-a874-6b9ea93c0ef2/new-removebg-preview__1_-removebg-preview.png" className="news_label" />
+                                            <img style={{ width: "70px", marginLeft: "200px", marginTop: "20px" }} src="/image/new.png" className="news_label" />
                                             <div className="overlay" />
                                         </a>
                                     </NavLink>
@@ -112,7 +112,7 @@ export function Home() {
                                             </div>
                                         </div>
                                         <h3>
-                                            <span>{value.nameProduct}</span>
+                                            <span>{value.productName}</span>
                                         </h3>
                                         <div className="pricing">
                                             <p className="price">
@@ -135,7 +135,7 @@ export function Home() {
                 <div className="container">
                     <div className="row">
                         <div className="col-md-6">
-                            <img style={{ width: "250%" }} src="https://o.remove.bg/downloads/d323f0d1-f86a-4be9-8076-9af458ad2683/one-removebg-preview.png" className="img-fluid" alt="" />
+                            <img style={{ width: "250%" }} src="/image/sneaker.png" className="img-fluid" alt="" />
                         </div>
                         <div className="col-md-6">
                             <div className="heading-section heading-section-white">

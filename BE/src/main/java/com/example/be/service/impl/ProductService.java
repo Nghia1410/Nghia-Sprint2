@@ -13,6 +13,10 @@ public class ProductService implements IProductService {
     @Autowired
     private IProductRepository iProductRepository;
 
+    @Override
+    public List<Product> searchByName(String productName) {
+        return iProductRepository.searchByNameProduct(productName);
+    }
 
     @Override
     public List<Product> showList() {

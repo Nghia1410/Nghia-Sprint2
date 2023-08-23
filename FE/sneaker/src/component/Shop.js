@@ -6,8 +6,8 @@ import { QuantityContext } from "./QuantityContext";
 import { useContext } from "react";
 import axios from "axios";
 import * as UserService from "..//service/userService"
-
-
+import { Form, Field, Formik } from "formik";
+import "..//css/search.css"
 
 
 
@@ -20,7 +20,9 @@ export function Shop() {
   const navigate = useNavigate();
   const [userId, setUserId] = useState(0);
   const username = sessionStorage.getItem('USERNAME');
+  const role = sessionStorage.getItem('roles');
   const [amount, setAmount] = useState(1);
+
 
 
   useEffect(() => {
@@ -34,30 +36,36 @@ export function Shop() {
 
   const addToCart = (productId, item) => {
     if (!username) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Log in to see your Cart',
-        showConfirmButton: false,
-        timer: 1500
-      });
-      navigate('/api/login')
-    }else{
-    const apiUrl = `http://localhost:8080/api/cart/addToCart/${userId}/${productId}/${amount}`;
-    setIconQuantity(iconQuantity + 1)
-    axios.get(apiUrl)
-      .then(response => {
         Swal.fire({
-          text: 'Add to cart successfully!',
-          icon: 'success',
-          confirmButtonText: 'OK'
-        })
-      })
-      .catch(error => {
-        console.error('Error adding item to cart:', error.response);
-      });
-  };
-  }
-
+            icon: 'error',
+            title: 'Log in to see your Cart',
+            showConfirmButton: false,
+            timer: 1500
+        });
+        navigate('/login')
+    } else {
+        const apiUrl = `http://localhost:8080/v2/cart/addToCart/${userId}/${productId}/${amount}`;
+        setIconQuantity(iconQuantity + 1);
+        const config = {
+            headers: {
+                'Authorization': 'Bearer ' + sessionStorage.getItem("TOKEN"),
+            },
+        };
+        axios.get(apiUrl, config)
+            .then(response => {
+                Swal.fire({
+                    title: 'Notification',
+                    text: 'Add to cart successfully!',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+            })
+            .catch(error => {
+                console.error('Error adding item to cart:', error.response);
+            });
+    }
+    ;
+}
   const handleDisplayByType = async (type) => {
     const res = await productService.getAllProductByType(type);
     setProduct(res);
@@ -70,12 +78,12 @@ export function Shop() {
     }
     showProductType()
   }, []);
+  const showList = async () => {
+    const rs = await productService.findAllProduct();
+    setProduct(rs)
+  }
 
   useEffect(() => {
-    const showList = async () => {
-      const rs = await productService.findAllProduct();
-      setProduct(rs)
-    }
     showList()
   }, []);
   const handleLoadMore = () => {
@@ -84,6 +92,9 @@ export function Shop() {
   const handleAddToCartClick = (productId) => {
     addToCart(productId);
   };
+
+
+
   return (
     <>
       <div
@@ -119,7 +130,32 @@ export function Shop() {
         <div className="container">
           <div className="row">
             <div className="col-md-8 col-lg-10 order-md-last">
+              <Formik initialValues={{ productName: '' }} onSubmit={async (values) => {
+                if (!values.productName) {
+                  showList();
+                } else {
+                  const res = await productService.searchProduct(values.productName);
+                  setProduct(res);
+                }
+              }}>
+                <Form action="" id="search-box" style={{ marginTop: -16, marginLeft: "-3%" }}>
+                  <Field
+                    id="search-text"
+                    type="text"
+                    name="productName"
+                    placeholder="Search here..."
+                  />
+
+                  <button id="search-btn" type='submit'>
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                  </button>
+                </Form>
+              </Formik>
+
+
               <div className="row">
+
+
                 {product?.slice(0, itemsToShow)?.map((value, index) => (
                   <div className="col-sm-12 col-md-12 col-lg-4 d-flex" key={index}>
                     <div className="product d-flex flex-column">
@@ -157,7 +193,7 @@ export function Shop() {
                           </div>
                         </div>
                         <h3>
-                          <a href="#">{value.nameProduct}</a>
+                          <a href="#">{value.productName}</a>
                         </h3>
                         <div className="pricing">
                           <p className="price">
@@ -165,30 +201,30 @@ export function Shop() {
                           </p>
                         </div>
                         <p className="bottom-area d-flex px-3">
-                          <a href="#" className="add-to-cart text-center py-2 mr-1" onClick={() => handleAddToCartClick(value.productId)}>
+                          <a style={{ width: 106, marginTop: -37, marginLeft: 70 }} href="#" className="add-to-cart text-center py-2 mr-1" onClick={() => handleAddToCartClick(value.productId)}>
                             <span>
                               Add to cart <i className="ion-ios-add ml-1" />
                             </span>
                           </a>
 
-                          <a href="#" className="buy-now text-center py-2">
-                            Buy now
-                            <span>
-                              <i className="ion-ios-cart ml-1" />
-                            </span>
-                          </a>
+
+
                         </p>
                       </div>
 
                     </div>
                   </div>
                 ))}
-
+                {product?.length === 0 && (
+                  <tr className="text-center">
+                    <img src="https://www.groceryonmobile.com/static/media/product-not-found.f96eec329d0cf1188bbb.jpg" alt="" />
+                  </tr>
+                )}
 
               </div>
               {itemsToShow < product.length && (
                 <div className="text-center mt-3">
-                  <button style={{ width: "100px" }} className="btn btn-primary" onClick={handleLoadMore}>
+                  <button style={{ width: "100px", marginRight: 193 }} className="btn btn-primary" onClick={handleLoadMore}>
                     Load More
                   </button>
                 </div>
@@ -280,91 +316,7 @@ export function Shop() {
           </div>
         </div>
       </section>
-      <section className="ftco-gallery">
-        <div className="container">
-          <div className="row justify-content-center">
-            <div className="col-md-8 heading-section text-center mb-4 ftco-animate">
-              <h2 className="mb-4">Follow Us On Instagram</h2>
-              <p>
-                Far far away, behind the word mountains, far from the countries
-                Vokalia and Consonantia, there live the blind texts. Separated they
-                live in
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="container-fluid px-0">
-          <div className="row no-gutters">
-            <div className="col-md-4 col-lg-2 ftco-animate">
-              <a
-                href="images/gallery-1.jpg"
-                className="gallery image-popup img d-flex align-items-center"
-                style={{ backgroundImage: "url(images/gallery-1.jpg)" }}
-              >
-                <div className="icon mb-4 d-flex align-items-center justify-content-center">
-                  <span className="icon-instagram" />
-                </div>
-              </a>
-            </div>
-            <div className="col-md-4 col-lg-2 ftco-animate">
-              <a
-                href="images/gallery-2.jpg"
-                className="gallery image-popup img d-flex align-items-center"
-                style={{ backgroundImage: "url(images/gallery-2.jpg)" }}
-              >
-                <div className="icon mb-4 d-flex align-items-center justify-content-center">
-                  <span className="icon-instagram" />
-                </div>
-              </a>
-            </div>
-            <div className="col-md-4 col-lg-2 ftco-animate">
-              <a
-                href="images/gallery-3.jpg"
-                className="gallery image-popup img d-flex align-items-center"
-                style={{ backgroundImage: "url(images/gallery-3.jpg)" }}
-              >
-                <div className="icon mb-4 d-flex align-items-center justify-content-center">
-                  <span className="icon-instagram" />
-                </div>
-              </a>
-            </div>
-            <div className="col-md-4 col-lg-2 ftco-animate">
-              <a
-                href="images/gallery-4.jpg"
-                className="gallery image-popup img d-flex align-items-center"
-                style={{ backgroundImage: "url(images/gallery-4.jpg)" }}
-              >
-                <div className="icon mb-4 d-flex align-items-center justify-content-center">
-                  <span className="icon-instagram" />
-                </div>
-              </a>
-            </div>
-            <div className="col-md-4 col-lg-2 ftco-animate">
-              <a
-                href="images/gallery-5.jpg"
-                className="gallery image-popup img d-flex align-items-center"
-                style={{ backgroundImage: "url(images/gallery-5.jpg)" }}
-              >
-                <div className="icon mb-4 d-flex align-items-center justify-content-center">
-                  <span className="icon-instagram" />
-                </div>
-              </a>
-            </div>
-            <div className="col-md-4 col-lg-2 ftco-animate">
-              <a
-                href="images/gallery-6.jpg"
-                className="gallery image-popup img d-flex align-items-center"
-                style={{ backgroundImage: "url(images/gallery-6.jpg)" }}
-              >
-                <div className="icon mb-4 d-flex align-items-center justify-content-center">
-                  <span className="icon-instagram" />
-                </div>
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-      <footer className="ftco-footer ftco-section">
+      <footer className="ftco-footer ftco-section" style={{ marginTop: 40 }}>
         <div className="container">
           <div className="row">
             <div className="mouse">
@@ -513,6 +465,7 @@ export function Shop() {
       </footer>
 
     </>
+
 
   )
 }

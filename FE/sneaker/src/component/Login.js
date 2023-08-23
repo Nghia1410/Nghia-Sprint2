@@ -7,15 +7,19 @@ import React, { useState } from "react";
 
 
 import 'react-toastify/dist/ReactToastify.css';
+import { useEffect } from "react";
 
 export function Login() {
     const navigate = useNavigate();
     const [failedAccount, setFailedAccount] = useState(null);
+    const username = sessionStorage.getItem('USERNAME');
 
-    if (sessionStorage.getItem("TOKEN")) {
-        navigate('/');
-        return null;
-    }
+    useEffect(() => {
+        if (username) {
+            navigate("/")
+        }
+    }, []);
+
     return (
         <div id="loginPage">
             <div className="">
@@ -79,15 +83,7 @@ export function Login() {
 
             <footer className="ftco-footer ftco-section">
                 <div className="container">
-                    <div className="row">
-                        <div className="mouse">
-                            <a href="#" className="mouse-icon">
-                                <div className="mouse-wheel">
-                                    <span className="ion-ios-arrow-up" />
-                                </div>
-                            </a>
-                        </div>
-                    </div>
+                  
                     <div className="row mb-5">
                         <div className="col-md">
                             <div className="ftco-footer-widget mb-4">
@@ -99,17 +95,17 @@ export function Login() {
                                 </p>
                                 <ul className="ftco-footer-social list-unstyled float-md-left float-lft mt-5">
                                     <li className="">
-                                        <a href="#">
+                                        <a href="https://twitter.com/?lang=en">
                                             <span className="icon-twitter" />
                                         </a>
                                     </li>
                                     <li className="">
-                                        <a href="#">
+                                        <a href="https://www.facebook.com/">
                                             <span className="icon-facebook" />
                                         </a>
                                     </li>
                                     <li className="">
-                                        <a href="#">
+                                        <a href="https://www.instagram.com/">
                                             <span className="icon-instagram" />
                                         </a>
                                     </li>

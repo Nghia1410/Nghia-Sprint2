@@ -1,15 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import * as UserService from "../service/userService";
 import * as CartService from "../service/cartService";
-import Swal from 'sweetalert2';
-import { useNavigate } from 'react-router';
-
 
 export function History() {
   const [userId, setUserId] = useState(0);
   const username = sessionStorage.getItem('USERNAME');
   const [history, setHistory] = useState([]);
-  const navigate = useNavigate();
+  const [price, setPrice] = useState("");
+  const [image, setImage] = useState("");
+  const [productName, setProductName] = useState("");
+  const [amount, setAmount] = useState("");
+
+  function handleShowModal(
+    price,
+    image,
+    productName,
+    amount
+
+  ) {
+    setPrice(price);
+    setImage(image);
+    setProductName(productName)
+    setAmount(amount)
+  }
 
   useEffect(() => {
     const getUserName = async () => {
@@ -31,19 +44,6 @@ export function History() {
 
     getHistory();
   }, [userId]);
-
-  if (!sessionStorage.getItem("roles")) {
-
-    Swal.fire({
-      title: 'Notification!',
-      text: `You must login to see your cart`,
-      icon: 'error',
-      confirmButtonText: 'OK',
-    });
-    navigate("/login")
-    return null
-
-  }
 
   return (
     <>
@@ -88,6 +88,8 @@ export function History() {
                   <th>Name Customer</th>
                   <th>Day Paypal</th>
                   <th>Total</th>
+                  <th>Detail</th>
+
                 </tr>
               </thead>
               <tbody>
@@ -95,15 +97,107 @@ export function History() {
                   <tr key={index}>
                     <td scope="row">{index + 1}</td>
                     <td>{order.codeBill}</td>
-                    <td>{order.user.username}</td>
+                    <td>{order.username}</td>
                     <td>{order.orderDate}</td>
                     <td style={{ fontFamily: "Cabin" }}>
                       {new Intl.NumberFormat().format(order.total)}VNĐ
                     </td>
+                    <td>
+                      <button
+                        className="btn btn-light d-none d-sm-table-cell"
+                        onClick={() =>
+                          handleShowModal(
+                            order.total,
+                            order.image,
+                            order.productName,
+                            order.amount
+                          )
+                        }
+                        data-bs-target="#staticBackdrop"
+                        data-bs-toggle="modal"
+                        type="button"
+                      >
+                        <img
+                          width="20"
+                          height="20"
+                          src="https://img.icons8.com/color/48/bulleted-list.png"
+                          alt="bulleted-list"
+                        />
+                      </button>
+                    </td>
+
+
                   </tr>
                 ))}
               </tbody>
             </table>
+          </div>
+        </div>
+      </div>
+      <div
+        className="modal fade"
+        id="staticBackdrop"
+        data-bs-backdrop="static"
+        data-bs-keyboard="false"
+        tabIndex={-1}
+        aria-labelledby="staticBackdropLabel"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog">
+          <div
+            className="modal-content bg-light"
+            style={{ background: "none", marginTop: "5rem" }}
+          >
+            <div className="modal-header">
+              <h5
+                className=" navbar-brand "
+                id="staticBackdropLabel"
+                style={{
+                  marginLeft: 200,
+                  fontSize: 25
+                }}
+              >
+                Detail
+              </h5>
+              <button
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              />
+            </div>
+            <div className="modal-body" style={{ backgroundColor: "white" }}>
+              <div className="container-fluid">
+                <div className="row">
+                  <div
+                    className="col-md-12"
+                    style={{ display: "inline-block", marginTop: "20px" }}
+                  >
+                    <p className="text-muted">
+                      Name Product: <strong>{productName}</strong>
+                    </p>
+                    <p className="text-muted">
+                      Price: <strong> {Intl.NumberFormat().format(price)} VND
+                      </strong>
+                    </p>
+
+                    <p className="text-muted">
+                      <img style={{ width: 432, textAlign: "center" }} src={image} alt="" />
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                data-bs-dismiss="modal"
+                style={{ background: "#ea845b", border: "none" }}
+              >
+                Back
+              </button>
+            </div>
           </div>
         </div>
       </div>

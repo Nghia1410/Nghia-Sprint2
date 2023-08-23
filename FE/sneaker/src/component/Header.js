@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2"
 import { useContext } from "react";
 import { QuantityContext } from "./QuantityContext";
 import * as CartService from "..//service/cartService"
 import * as UserService from "..//service/userService"
+
 
 
 export const Header = () => {
@@ -15,8 +16,7 @@ export const Header = () => {
     const [isMediaQueryMatched, setIsMediaQueryMatched] = useState(false);
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
     const { iconQuantity, setIconQuantity } = useContext(QuantityContext)
-
-
+    const navigate = useNavigate();
 
     useEffect(() => {
         const getUserName = async () => {
@@ -26,6 +26,7 @@ export const Header = () => {
         }
         getUserName();
     }, []);
+
 
     useEffect(() => {
         const showListCart = async () => {
@@ -87,7 +88,7 @@ export const Header = () => {
         sessionStorage.removeItem("TOKEN");
         sessionStorage.removeItem("USERNAME");
         sessionStorage.removeItem("roles");
-        window.location.href = '/';
+        window.location.href = '/login';
     };
 
     return (
@@ -95,7 +96,7 @@ export const Header = () => {
 
             {sessionStorage.getItem("roles") === "ADMIN" && (
                 <>
-                    <nav 
+                    <nav
                         className="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light"
                         id="ftco-navbar" style={{ height: "10%" }}
                     >
@@ -117,26 +118,33 @@ export const Header = () => {
                             <div className="collapse navbar-collapse" id="ftco-nav" style={{ marginLeft: "38%", marginRight: "-29%" }}>
                                 <ul className="navbar-nav ml-auto">
                                     <li className="nav-item active">
-                                        <a href="/" className="nav-link">
+                                        <Link to="/" className="nav-link">
                                             Home
-                                        </a>
+                                        </Link>
                                     </li>
                                     <li className="nav-item dropdown">
-                                        <a
+                                        <Link
                                             className="nav-link "
-                                            href="/shop"
+                                            to="/shop"
                                         >
                                             Shop
-                                        </a>
+                                        </Link>
 
                                     </li>
-                                  
+
                                     <li className="nav-item active">
-                                        <a href="/employee" className="nav-link">
+                                        <Link to="/employee" className="nav-link">
                                             Employee
-                                        </a>
+                                        </Link>
                                     </li>
-                                    <NavLink to={`/cart/${username}`}>
+
+                                    <li className="nav-item active">
+                                        <Link to="/history" className="nav-link">
+                                            History
+                                        </Link>
+                                    </li>
+
+                                    <NavLink to={`/v2/cart/${username}`}>
                                         <li className="nav-item cta cta-colored">
 
                                             <a className="nav-link" >
@@ -157,6 +165,8 @@ export const Header = () => {
                                     </li>
                                     <li className="nav-item">
                                         <Link className="nav-link" style={{ color: "red" }} onClick={() => logout()}>Log out</Link>
+
+
                                     </li>
 
 
@@ -179,9 +189,9 @@ export const Header = () => {
                             id="ftco-navbar" style={{ height: "10%" }}
                         >
                             <div className="container" style={{ marginTop: -13, marginRight: "22%" }}>
-                                <a className="navbar-brand" href="/">
+                                <Link className="navbar-brand" to="/">
                                     HypeSneaker
-                                </a>
+                                </Link>
                                 <button
                                     className="navbar-toggler"
                                     type="button"
@@ -196,22 +206,27 @@ export const Header = () => {
                                 <div className="collapse navbar-collapse" id="ftco-nav" style={{ marginLeft: "38%", marginRight: "-29%" }}>
                                     <ul className="navbar-nav ml-auto">
                                         <li className="nav-item active">
-                                            <a href="/" className="nav-link">
+                                            <Link to="/" className="nav-link">
                                                 Home
-                                            </a>
+                                            </Link>
                                         </li>
                                         <li className="nav-item dropdown">
-                                            <a
+                                            <NavLink
                                                 className="nav-link "
-                                                href="/shop"
+                                                to="/shop"
                                             >
                                                 Shop
-                                            </a>
+                                            </NavLink>
 
                                         </li>
-                                     
 
-                                        <NavLink to={`/cart/${username}`}>
+                                        <li className="nav-item active">
+                                            <a href="/history" className="nav-link">
+                                                History
+                                            </a>
+                                        </li>
+
+                                        <NavLink to={`/v2/cart/${username}`}>
                                             <li className="nav-item cta cta-colored">
 
                                                 <a className="nav-link">
@@ -243,7 +258,7 @@ export const Header = () => {
             {
                 !sessionStorage.getItem("TOKEN") && (
                     <>
-                    <nav
+                        <nav
                             className="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light"
                             id="ftco-navbar" style={{ height: "10%" }}
                         >
@@ -265,41 +280,41 @@ export const Header = () => {
                                 <div className="collapse navbar-collapse" id="ftco-nav" style={{ marginLeft: "38%", marginRight: "-29%" }}>
                                     <ul className="navbar-nav ml-auto">
                                         <li className="nav-item active">
-                                            <a href="/" className="nav-link">
+                                            <Link to="/" className="nav-link">
                                                 Home
-                                            </a>
+                                            </Link>
                                         </li>
                                         <li className="nav-item dropdown">
-                                            <a
+                                            <Link
                                                 className="nav-link "
-                                                href="/shop"
+                                                to="/shop"
                                             >
                                                 Shop
-                                            </a>
+                                            </Link>
 
                                         </li>
-                                     
+
 
                                         <li style={{ width: 84 }} className="nav-item">
-                                        <a style={{ marginTop: "-4%" }} href="/login" className="nav-link">
-                                            <img style={{ width: 25 }} src="https://o.remove.bg/downloads/b3a8cfa0-1b4d-4c26-bc4e-07adb1c203a6/avatar-removebg-preview.png"></img>
-                                        </a>
-                                    </li>
+                                            <a style={{ marginTop: "-4%" }} href="/login" className="nav-link">
+                                                <img style={{ width: 25 }} src="/image/avata.png"></img>
+                                            </a>
+                                        </li>
 
                                     </ul>
                                 </div>
                             </div>
 
                         </nav>
-        </>
-    )
-}
+                    </> 
+                )
+            }
 
-<div className="menu-toggle" onClick={toggleMenu}>
-    <div className="bar"></div>
-    <div className="bar"></div>
-    <div className="bar"></div>
-</div>
+            <div className="menu-toggle" onClick={toggleMenu}>
+                <div className="bar"></div>
+                <div className="bar"></div>
+                <div className="bar"></div>
+            </div>
 
         </header >
     );
