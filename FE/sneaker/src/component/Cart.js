@@ -1,21 +1,22 @@
-import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
+import { PayPalButton } from "react-paypal-button-v2";
 import React, { useState, useEffect, useContext } from 'react';
 import Swal from 'sweetalert2';
 import * as UserService from "..//service/userService"
 import * as CartService from "..//service/cartService"
 import { useNavigate, useParams } from 'react-router';
 import { QuantityContext } from './QuantityContext';
+import { toast } from "react-toastify";
 
 
 export const Cart = () => {
     const [userId, setUserId] = useState(0);
     const [cart, setCart] = useState([]);
+    const token = sessionStorage.getItem("token");
     const username = sessionStorage.getItem('USERNAME');
     const param = useParams();
     const [productQuantities, setProductQuantities] = useState({});
     const navigate = useNavigate();
     const { iconQuantity, setIconQuantity } = useContext(QuantityContext)
-
 
 
     useEffect(() => {
@@ -245,39 +246,64 @@ export const Cart = () => {
                                                         <span className="text-end">{Intl.NumberFormat().format(calculateTotalSum() + 30000)} VND</span>
                                                     </p>
                                                 </div>
-                                                <PayPalScriptProvider>
-                                                    <PayPalButtons
-                                                        createOrder={(data, actions) => {
-                                                            return actions.order.create({
-                                                                purchase_units: [
-                                                                    {
-                                                                        amount: {
-                                                                            value: (calculateTotalSum / 24000).toString().slice(0, 4),
-                                                                            currency_code: 'USD'
-                                                                        },
-                                                                    },
-                                                                ],
-                                                            });
-                                                        }}
-                                                        onApprove={(data, actions) => {
-                                                            return actions.order.capture().then(function () {
-                                                                Swal.fire({
-                                                                    icon: 'success',
-                                                                    title: 'Payment success',
-                                                                    showConfirmButton: false,
-                                                                    timer: 1000,
-                                                                });
+
+                                                <PayPalButton
+                                                            amount={calculateTotalSum()}
+                                                            // shippingPreference="NO_SHIPPING" // default is "GET_FROM_FILE"
+                                                            onSuccess={async (details, data) => {
+                                                                await toast.success("Transaction completed by " + details.payer.name.given_name);
+                                                                // const res = await CartService.saveHistory() 
                                                                 const totalAmount = calculateTotalSum();
                                                                 CartService.saveHistory(userId, totalAmount).then(() => {
                                                                     CartService.setCart(userId).then((updatedCartData) => {
                                                                         setCart(updatedCartData);
                                                                     });
+                                                                    navigate("/history")
                                                                 });
-                                                                navigate('/history')
+                                                                
+                                                                // OPTIONAL: Call your server to save the transaction
+                                                                return fetch("/paypal-transaction-complete", {
+                                                                    method: "post",
+                                                                    body: JSON.stringify({
+                                                                        orderID: data.orderID
+                                                                    })
+                                                                });
+                                                            }}
+                                                        />
+
+
+
+                                                {/* <PayPalButton
+                                                    createOrder={(data, actions) => {
+                                                        return actions.order.create({
+                                                            purchase_units: [
+                                                                {
+                                                                    amount: {
+                                                                        value: (calculateTotalSum / 24000).toString().slice(0, 4),
+                                                                        currency_code: 'USD'
+                                                                    },
+                                                                },
+                                                            ],
+                                                        });
+                                                    }}
+                                                    onApprove={(data, actions) => {
+                                                        return actions.order.capture().then(function () {
+                                                            Swal.fire({
+                                                                icon: 'success',
+                                                                title: 'Payment success',
+                                                                showConfirmButton: false,
+                                                                timer: 1000,
                                                             });
-                                                        }}
-                                                    />
-                                                </PayPalScriptProvider>
+                                                            const totalAmount = calculateTotalSum();
+                                                            CartService.saveHistory(userId, totalAmount).then(() => {
+                                                                CartService.setCart(userId).then((updatedCartData) => {
+                                                                    setCart(updatedCartData);
+                                                                });
+                                                            });
+                                                            navigate('/history')
+                                                        });
+                                                    }}
+                                                /> */}
                                             </div>
                                         </div>
                                     </div>

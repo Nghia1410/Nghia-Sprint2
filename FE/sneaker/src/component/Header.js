@@ -156,10 +156,6 @@ export const Header = () => {
                                         </li>
                                     </NavLink>
 
-
-
-
-
                                     <li className="nav-item">
                                         <a className="nav-link" style={{ color: "red" }}>{sessionStorage.getItem("USERNAME")}</a>
                                     </li>
@@ -306,7 +302,7 @@ export const Header = () => {
                             </div>
 
                         </nav>
-                    </> 
+                    </>
                 )
             }
 

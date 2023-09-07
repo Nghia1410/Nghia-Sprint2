@@ -6,12 +6,28 @@ import Swal from 'sweetalert2';
 export function Employee() {
     const navigate = useNavigate();
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const roles = sessionStorage.getItem('ROLE');
+
 
     useEffect(() => {
-        if (!sessionStorage.getItem("TOKEN")) {
+        if (sessionStorage.getItem("roles") === "USER") {
             Swal.fire({
                 title: 'Notification!',
-                text: `You must login to see your cart`,
+                text: `Not have access`,
+                icon: 'error',
+                confirmButtonText: 'OK', 
+            });
+            navigate("/login");
+        } else {
+            setIsLoggedIn(true);
+        }
+    }, [navigate]);
+
+    useEffect(() => {
+        if (!sessionStorage.getItem("roles")) {
+            Swal.fire({
+                title: 'Notification!',
+                text: `Not have access`,
                 icon: 'error',
                 confirmButtonText: 'OK', 
             });

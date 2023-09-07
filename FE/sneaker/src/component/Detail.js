@@ -80,7 +80,7 @@ export function Detail() {
 
 
     }
-    const handleAddToCartClick = (productId) => {
+    const   handleAddToCartClick = (productId) => {
         if (!userId) {
             Swal.fire({
                 icon: 'error',

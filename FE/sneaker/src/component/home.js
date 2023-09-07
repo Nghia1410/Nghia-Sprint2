@@ -143,7 +143,6 @@ export function Home() {
                                 <h2 className="mb-3">Deal of the month</h2>
                             </div>
                             <div id="timer" className="d-flex mb-4">
-                                <div className="time" id="days" />
                                 <div className="time pl-4" id="hours" />
                                 <div className="time pl-4" id="minutes" />
                                 <div className="time pl-4" id="seconds" />

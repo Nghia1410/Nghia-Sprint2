@@ -47,7 +47,6 @@ export function Login() {
                                 sessionStorage.setItem('USERNAME', e.username);
                                 sessionStorage.setItem('USERID', e.userId);
                                 sessionStorage.setItem('roles', e.roles[0])
-
                                 window.location.href = '/';
                             })
                             .catch(() => {
